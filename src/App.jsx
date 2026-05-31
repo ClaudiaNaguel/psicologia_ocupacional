@@ -4,6 +4,17 @@ import { supabase } from './lib/supabaseClient'
 
 // Página de inicio
 function Home() {
+  const [volumenes, setVolumenes] = useState([])
+
+  useEffect(() => {
+    cargarVolumenes()
+  }, [])
+
+  const cargarVolumenes = async () => {
+    const { data } = await supabase.from('volumes').select('*').order('order_index')
+    setVolumenes(data || [])
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow-lg">
@@ -12,9 +23,11 @@ function Home() {
             <h1 className="text-2xl font-bold text-blue-600">ArqTrabajo</h1>
             <div className="space-x-4">
               <Link to="/" className="text-gray-700 hover:text-blue-600">Inicio</Link>
-              <Link to="/volumen/1" className="text-gray-700 hover:text-blue-600">Volumen I</Link>
-              <Link to="/volumen/2" className="text-gray-700 hover:text-blue-600">Volumen II</Link>
-              <Link to="/volumen/3" className="text-gray-700 hover:text-blue-600">Volumen III</Link>
+              {volumenes.map(v => (
+                <Link key={v.id} to={`/volumen/${v.number}`} className="text-gray-700 hover:text-blue-600">
+                  Volumen {v.number}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -24,9 +37,15 @@ function Home() {
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-5xl font-bold mb-4">La Arquitectura del Trabajo</h1>
           <p className="text-xl mb-8">Psicología, Subjetividad y Dinámicas Organizacionales</p>
-          <Link to="/volumen/1" className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold">
-            Comenzar a leer
-          </Link>
+          <p className="text-lg mb-8 max-w-2xl mx-auto">
+            Una obra completa de Claudia Nagüel sobre psicología del trabajo, 
+            salud ocupacional y gestión organizacional.
+          </p>
+          {volumenes.length > 0 && (
+            <Link to={`/volumen/${volumenes[0].number}`} className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">
+              Comenzar a leer
+            </Link>
+          )}
         </div>
       </section>
 
@@ -34,18 +53,13 @@ function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Los Tres Volúmenes</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <Link to="/volumen/1" className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition block">
-              <h3 className="text-xl font-semibold mb-2">Volumen I</h3>
-              <p className="text-gray-600">Fundamentos Teóricos de la Psicología del Trabajo</p>
-            </Link>
-            <Link to="/volumen/2" className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition block">
-              <h3 className="text-xl font-semibold mb-2">Volumen II</h3>
-              <p className="text-gray-600">Dinámicas de Grupo, Liderazgo y Gestión del Talento</p>
-            </Link>
-            <Link to="/volumen/3" className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition block">
-              <h3 className="text-xl font-semibold mb-2">Volumen III</h3>
-              <p className="text-gray-600">Salud Ocupacional, Clima y Gestión Estratégica de RRHH</p>
-            </Link>
+            {volumenes.map(volumen => (
+              <Link key={volumen.id} to={`/volumen/${volumen.number}`} className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition block">
+                <h3 className="text-xl font-semibold mb-2">Volumen {volumen.number}</h3>
+                <p className="text-gray-600">{volumen.title}</p>
+                <p className="text-gray-500 text-sm mt-2">{volumen.description}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -73,7 +87,6 @@ function VolumenPage() {
   const cargarDatos = async () => {
     setLoading(true)
     try {
-      // 1. Obtener el volumen
       const { data: volData, error: volError } = await supabase
         .from('volumes')
         .select('*')
@@ -83,24 +96,19 @@ function VolumenPage() {
       if (volError) throw volError
       setVolumen(volData)
 
-      // 2. Obtener capítulos de este volumen
-      const { data: capsData, error: capsError } = await supabase
+      const { data: capsData } = await supabase
         .from('chapters')
         .select('*')
         .eq('volume_id', volData.id)
         .order('order_index')
 
-      if (capsError) throw capsError
-
-      // 3. Para cada capítulo, obtener sus secciones
       const capsConSecciones = await Promise.all(
-        capsData.map(async (cap) => {
+        (capsData || []).map(async (cap) => {
           const { data: secsData } = await supabase
             .from('sections')
             .select('*')
             .eq('chapter_id', cap.id)
             .order('order_index')
-          
           return { ...cap, secciones: secsData || [] }
         })
       )
@@ -114,11 +122,7 @@ function VolumenPage() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Cargando...</div>
-      </div>
-    )
+    return <div className="min-h-screen flex items-center justify-center">Cargando...</div>
   }
 
   if (!volumen) {
@@ -149,44 +153,24 @@ function VolumenPage() {
       <div className="max-w-4xl mx-auto py-12 px-4">
         <Link to="/" className="text-blue-600 hover:underline inline-block mb-6">← Volver al inicio</Link>
         
-        <h1 className="text-4xl font-bold mb-4">
-          Volumen {volumen.number}: {volumen.title}
-        </h1>
+        <h1 className="text-4xl font-bold mb-4">Volumen {volumen.number}: {volumen.title}</h1>
         <p className="text-gray-600 text-lg mb-8">{volumen.description}</p>
         
-        {capitulos.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-500">Próximamente: contenido completo del Volumen {volumen.number}</p>
-          </div>
-        ) : (
-          capitulos.map((capitulo) => (
-            <div key={capitulo.id} className="mb-8 border-l-4 border-blue-200 pl-4">
-              <h2 className="text-2xl font-semibold mb-3">
-                Capítulo {capitulo.number}: {capitulo.title}
-              </h2>
-              <div className="space-y-2 ml-4">
-                {capitulo.secciones.map((seccion) => (
-                  <Link
-                    key={seccion.id}
-                    to={`/lectura/${seccion.slug}`}
-                    className="block p-4 bg-white rounded-lg shadow hover:shadow-md transition border border-gray-100"
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="text-blue-600 hover:text-blue-800">
-                        {seccion.title}
-                      </span>
-                      {seccion.tier !== 'free' && (
-                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                          Premium
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                ))}
-              </div>
+        {capitulos.map((capitulo) => (
+          <div key={capitulo.id} className="mb-8 border-l-4 border-blue-200 pl-4">
+            <h2 className="text-2xl font-semibold mb-3">Capítulo {capitulo.number}: {capitulo.title}</h2>
+            <div className="space-y-2 ml-4">
+              {capitulo.secciones.map((seccion) => (
+                <Link key={seccion.id} to={`/lectura/${seccion.slug}`} className="block p-4 bg-white rounded-lg shadow hover:shadow-md transition border border-gray-100">
+                  <div className="flex justify-between items-center">
+                    <span className="text-blue-600 hover:text-blue-800">{seccion.title}</span>
+                    {seccion.tier !== 'free' && <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Premium</span>}
+                  </div>
+                </Link>
+              ))}
             </div>
-          ))
-        )}
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -221,11 +205,7 @@ function LecturaPage() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Cargando contenido...</div>
-      </div>
-    )
+    return <div className="min-h-screen flex items-center justify-center">Cargando contenido...</div>
   }
 
   if (!seccion) {
@@ -254,16 +234,11 @@ function LecturaPage() {
       </nav>
 
       <article className="max-w-3xl mx-auto py-12 px-4">
-        <Link to="/volumen/1" className="text-blue-600 hover:underline inline-flex items-center mb-6">
-          ← Volver al volumen
-        </Link>
-        
+        <Link to="/volumen/1" className="text-blue-600 hover:underline inline-flex items-center mb-6">← Volver al volumen</Link>
         <h1 className="text-3xl md:text-4xl font-bold mb-6">{seccion.title}</h1>
-        
         <div className="prose prose-lg max-w-none bg-white p-8 rounded-lg shadow">
           <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p>Contenido próximamente...</p>' }} />
         </div>
-        
         <div className="mt-8 pt-6 border-t text-center text-sm text-gray-500">
           <p>© 2026 - La Arquitectura del Trabajo - Claudia Nagüel</p>
         </div>
