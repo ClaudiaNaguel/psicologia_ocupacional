@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabaseClient'
+import TermCard from './components/TermCard'
 
 // Página de inicio
 function Home() {
