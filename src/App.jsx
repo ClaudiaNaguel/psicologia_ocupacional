@@ -5,7 +5,6 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 
-// Página de inicio
 function Home() {
   const [volumenes, setVolumenes] = useState([])
 
@@ -19,32 +18,129 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-lg p-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-blue-600">ArqTrabajo</Link>
-          <div className="space-x-4">
-            <Link to="/" className="text-gray-700 hover:text-blue-600">Inicio</Link>
-            <Link to="/volumen/1" className="text-gray-700 hover:text-blue-600">Volumen I</Link>
-            <Link to="/volumen/2" className="text-gray-700 hover:text-blue-600">Volumen II</Link>
-            <Link to="/volumen/3" className="text-gray-700 hover:text-blue-600">Volumen III</Link>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-r from-blue-900 to-blue-700 text-white overflow-hidden">
+        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <div className="relative max-w-7xl mx-auto px-4 py-24 sm:py-32">
+          <div className="text-center">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
+              La Arquitectura del Trabajo
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
+              Psicología, Subjetividad y Dinámicas Organizacionales
+            </p>
+            <p className="text-lg mb-12 text-blue-200 max-w-2xl mx-auto">
+              Una obra completa de <strong className="text-white">Claudia Nagüel</strong> sobre psicología del trabajo, 
+              salud ocupacional y gestión organizacional.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/volumen/1" className="bg-white text-blue-700 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition transform hover:scale-105 inline-flex items-center gap-2">
+                📖 Comenzar a leer
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <Link to="/pricing" className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-700 transition transform hover:scale-105 inline-flex items-center gap-2">
+                ⭐ Ver planes
+              </Link>
+            </div>
           </div>
         </div>
-      </nav>
-      
-      <div className="max-w-7xl mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-4">La Arquitectura del Trabajo</h1>
-        <p className="text-xl mb-8">Psicología, Subjetividad y Dinámicas Organizacionales</p>
-        
-        <div className="grid md:grid-cols-3 gap-6">
-          {volumenes.map(vol => (
-            <Link key={vol.id} to={`/volumen/${vol.number}`} className="bg-white p-6 rounded-lg shadow hover:shadow-lg">
-              <h2 className="text-xl font-semibold mb-2">Volumen {vol.number}</h2>
-              <p className="text-gray-600">{vol.title}</p>
-            </Link>
-          ))}
+        {/* Ola decorativa */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg className="w-full h-12 text-gray-50" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
+          </svg>
         </div>
       </div>
+
+      {/* Sección de volúmenes */}
+      <div className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Los Tres Volúmenes</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Una estructura completa que abarca desde los fundamentos teóricos hasta la gestión estratégica
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-8">
+          {volumenes.map((vol, index) => {
+            const colors = [
+              { bg: "from-blue-500 to-blue-600", icon: "📚", delay: "0s" },
+              { bg: "from-green-500 to-green-600", icon: "👥", delay: "0.1s" },
+              { bg: "from-purple-500 to-purple-600", icon: "🏥", delay: "0.2s" }
+            ]
+            return (
+              <Link 
+                key={vol.id} 
+                to={`/volumen/${vol.number}`} 
+                className="group transform transition-all duration-300 hover:-translate-y-2"
+                style={{ animationDelay: colors[index].delay }}
+              >
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
+                  <div className={`bg-gradient-to-r ${colors[index].bg} p-6 text-white`}>
+                    <div className="text-5xl mb-4">{colors[index].icon}</div>
+                    <h3 className="text-2xl font-bold">Volumen {vol.number}</h3>
+                  </div>
+                  <div className="p-6">
+                    <p className="text-gray-800 font-semibold mb-2">{vol.title}</p>
+                    <p className="text-gray-500 text-sm">{vol.description}</p>
+                    <div className="mt-4 flex items-center text-blue-600 group-hover:text-blue-700">
+                      <span className="text-sm font-medium">Explorar</span>
+                      <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Sección de características */}
+      <div className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">¿Qué encontrarás?</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Contenido interactivo y herramientas para profesionales y estudiantes
+            </p>
+          </div>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { icon: "📖", title: "Contenido completo", desc: "Los 3 volúmenes completos del libro" },
+              { icon: "🔍", title: "Términos interactivos", desc: "Haz clic en cualquier concepto para ver su definición" },
+              { icon: "⭐", title: "Contenido premium", desc: "Accede a capítulos exclusivos" },
+              { icon: "📧", title: "Newsletter", desc: "Recibe resúmenes y novedades" }
+            ].map((feat, i) => (
+              <div key={i} className="text-center p-6 rounded-xl hover:bg-gray-50 transition">
+                <div className="text-4xl mb-3">{feat.icon}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Newsletter Section */}
+      <div className="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-16">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">📧 Newsletter</h2>
+          <p className="text-gray-300 mb-6">
+            Recibe los resúmenes y novedades directamente en tu correo
+          </p>
+          <SubscribeForm />
+        </div>
+      </div>
+
+      <footer className="bg-gray-900 text-gray-400 py-8">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p>© 2026 Claudia Nagüel - Buenos Aires, Argentina</p>
+          <p className="text-sm mt-2">La Arquitectura del Trabajo: Psicología, Subjetividad y Dinámicas Organizacionales</p>
+        </div>
+      </footer>
     </div>
   )
 }
