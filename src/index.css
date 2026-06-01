@@ -218,3 +218,19 @@
   background-color: #fef3c7 !important;
   padding: 0 2px !important;
 }
+
+/* Bloque premium para "seguir leyendo" */
+.premium-block {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
