@@ -6,9 +6,12 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import SubscribeForm from './components/SubscribeForm'
 
-
 function Home() {
   const [volumenes, setVolumenes] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [showSearch, setShowSearch] = useState(false)
+  const [searchLoading, setSearchLoading] = useState(false)
 
   useEffect(() => {
     cargarVolumenes()
@@ -17,6 +20,49 @@ function Home() {
   const cargarVolumenes = async () => {
     const { data } = await supabase.from('volumes').select('*').order('order_index')
     setVolumenes(data || [])
+  }
+
+  // Función para quitar tildes y normalizar texto
+  const normalizeText = (text) => {
+    if (!text) return ''
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9\s]/g, "")
+  }
+
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) return
+    setShowSearch(true)
+    setSearchLoading(true)
+    
+    const searchNormalized = normalizeText(searchTerm)
+    
+    // Traer todas las secciones
+    const { data } = await supabase
+      .from('sections')
+      .select('*')
+      .limit(100)
+    
+    if (data) {
+      // Filtrar por título o contenido (ignorando tildes)
+      const results = data.filter(section => {
+        const titleNormalized = normalizeText(section.title)
+        const contentNormalized = normalizeText(section.content || '')
+        return titleNormalized.includes(searchNormalized) || 
+               contentNormalized.includes(searchNormalized)
+      })
+      setSearchResults(results)
+    }
+    setSearchLoading(false)
+  }
+
+  // Función para destacar la palabra buscada
+  const highlightText = (text) => {
+    if (!text) return ''
+    const regex = new RegExp(`(${searchTerm})`, 'gi')
+    return text.replace(regex, '<mark class="bg-yellow-200">$1</mark>')
   }
 
   return (
@@ -36,12 +82,70 @@ function Home() {
               Una obra completa de <strong className="text-white">Claudia Nagüel</strong> sobre psicología del trabajo, 
               salud ocupacional y gestión organizacional.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            
+            {/* Buscador */}
+            <div className="max-w-md mx-auto mb-8">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  placeholder="Buscar en el libro..."
+                  className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  onClick={handleSearch}
+                  className="bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition"
+                >
+                  🔍 Buscar
+                </button>
+              </div>
+            </div>
+
+            {/* Resultados de búsqueda */}
+            {showSearch && (
+              <div className="max-w-2xl mx-auto mt-4 bg-white rounded-lg shadow-lg text-left max-h-96 overflow-y-auto">
+                <div className="p-4 border-b flex justify-between items-center sticky top-0 bg-white">
+                  <h3 className="font-semibold text-gray-800">
+                    Resultados de búsqueda: "{searchTerm}"
+                  </h3>
+                  <button onClick={() => setShowSearch(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+                </div>
+                {searchLoading ? (
+                  <div className="p-8 text-center text-gray-500">Buscando...</div>
+                ) : searchResults.length === 0 ? (
+                  <div className="p-8 text-center text-gray-500">
+                    <p>No se encontraron resultados para <strong>"{searchTerm}"</strong></p>
+                    <p className="text-sm mt-2">💡 Sugerencia: Prueba con términos más cortos o sinónimos</p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="p-2 bg-gray-50 text-xs text-gray-500 border-b">
+                      {searchResults.length} resultado(s) encontrado(s)
+                    </div>
+                    {searchResults.map(result => (
+                      <Link
+                        key={result.id}
+                        to={`/lectura/${result.slug}`}
+                        onClick={() => setShowSearch(false)}
+                        className="block p-4 hover:bg-gray-50 border-b last:border-b-0 transition"
+                      >
+                        <p className="font-medium text-blue-600">{result.title}</p>
+                        <p className="text-sm text-gray-500 mt-1 line-clamp-2"
+                           dangerouslySetInnerHTML={{ 
+                             __html: highlightText(result.content?.substring(0, 200) || '') 
+                           }} />
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <Link to="/volumen/1" className="bg-white text-blue-700 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition transform hover:scale-105 inline-flex items-center gap-2">
                 📖 Comenzar a leer
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
               </Link>
               <Link to="/pricing" className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-700 transition transform hover:scale-105 inline-flex items-center gap-2">
                 ⭐ Ver planes
@@ -49,7 +153,6 @@ function Home() {
             </div>
           </div>
         </div>
-        {/* Ola decorativa */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg className="w-full h-12 text-gray-50" viewBox="0 0 1200 120" preserveAspectRatio="none">
             <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
@@ -78,7 +181,6 @@ function Home() {
                 key={vol.id} 
                 to={`/volumen/${vol.number}`} 
                 className="group transform transition-all duration-300 hover:-translate-y-2"
-                style={{ animationDelay: colors[index].delay }}
               >
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
                   <div className={`bg-gradient-to-r ${colors[index].bg} p-6 text-white`}>
@@ -102,7 +204,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Sección de características */}
+      {/* Sección de características interactivas */}
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
@@ -111,29 +213,29 @@ function Home() {
               Contenido interactivo y herramientas para profesionales y estudiantes
             </p>
           </div>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { icon: "📖", title: "Contenido completo", desc: "Los 3 volúmenes completos del libro" },
-              { icon: "🔍", title: "Términos interactivos", desc: "Haz clic en cualquier concepto para ver su definición" },
-              { icon: "⭐", title: "Contenido premium", desc: "Accede a capítulos exclusivos" },
-              { icon: "📧", title: "Newsletter", desc: "Recibe resúmenes y novedades" }
-            ].map((feat, i) => (
-              <div key={i} className="text-center p-6 rounded-xl hover:bg-gray-50 transition">
-                <div className="text-4xl mb-3">{feat.icon}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <Link to="/volumen/1" className="group text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300">
+              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">📖</div>
+              <h3 className="font-semibold text-gray-800 mb-2">Contenido completo</h3>
+              <p className="text-gray-500 text-sm">Los 3 volúmenes completos del libro</p>
+              <span className="inline-block mt-3 text-blue-600 text-sm opacity-0 group-hover:opacity-100 transition">Explorar →</span>
+            </Link>
 
-      {/* Newsletter Section */}
-      <div className="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-16">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">📧 Newsletter</h2>
-          <p className="text-gray-300 mb-6">
-            Recibe los resúmenes y novedades directamente en tu correo
-          </p>
-          <SubscribeForm />
+            <div className="group text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300 cursor-pointer"
+                 onClick={() => document.querySelector('input[placeholder="Buscar en el libro..."]')?.focus()}>
+              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">🔍</div>
+              <h3 className="font-semibold text-gray-800 mb-2">Búsqueda inteligente</h3>
+              <p className="text-gray-500 text-sm">Busca cualquier palabra o concepto en el libro</p>
+              <span className="inline-block mt-3 text-blue-600 text-sm opacity-0 group-hover:opacity-100 transition">Buscar ahora →</span>
+            </div>
+
+            <Link to="/pricing" className="group text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300">
+              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">⭐</div>
+              <h3 className="font-semibold text-gray-800 mb-2">Contenido premium</h3>
+              <p className="text-gray-500 text-sm">Accede a capítulos exclusivos</p>
+              <span className="inline-block mt-3 text-blue-600 text-sm opacity-0 group-hover:opacity-100 transition">Ver planes →</span>
+            </Link>
+          </div>
         </div>
       </div>
 
