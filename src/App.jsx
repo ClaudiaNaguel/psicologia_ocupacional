@@ -36,22 +36,22 @@ function Home() {
     if (!searchTerm.trim()) return
     setShowSearch(true)
     setSearchLoading(true)
-    
+
     const searchNormalized = normalizeText(searchTerm)
-    
+
     // Traer todas las secciones
     const { data } = await supabase
       .from('sections')
       .select('*')
       .limit(100)
-    
+
     if (data) {
       // Filtrar por título o contenido (ignorando tildes)
       const results = data.filter(section => {
         const titleNormalized = normalizeText(section.title)
         const contentNormalized = normalizeText(section.content || '')
-        return titleNormalized.includes(searchNormalized) || 
-               contentNormalized.includes(searchNormalized)
+        return titleNormalized.includes(searchNormalized) ||
+          contentNormalized.includes(searchNormalized)
       })
       setSearchResults(results)
     }
@@ -61,9 +61,14 @@ function Home() {
   // Función para destacar la palabra buscada
   const highlightText = (text) => {
     if (!text) return ''
-    const regex = new RegExp(`(${searchTerm})`, 'gi')
-    return text.replace(regex, '<mark class="bg-yellow-200">$1</mark>')
+    try {
+      const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+      return text.replace(regex, '<mark style="background-color:#fef3c7; font-size:0.6rem; padding:0 2px;">$1</mark>')
+    } catch {
+      return text
+    }
   }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -79,10 +84,10 @@ function Home() {
               Psicología, Subjetividad y Dinámicas Organizacionales
             </p>
             <p className="text-lg mb-12 text-blue-200 max-w-2xl mx-auto">
-              Una obra completa de <strong className="text-white">Claudia Nagüel</strong> sobre psicología del trabajo, 
+              Una obra completa de <strong className="text-white">Claudia Nagüel</strong> sobre psicología del trabajo,
               salud ocupacional y gestión organizacional.
             </p>
-            
+
             {/* Buscador */}
             <div className="max-w-md mx-auto mb-8">
               <div className="flex gap-2">
@@ -105,37 +110,34 @@ function Home() {
 
             {/* Resultados de búsqueda */}
             {showSearch && (
-              <div className="max-w-2xl mx-auto mt-4 bg-white rounded-lg shadow-lg text-left max-h-96 overflow-y-auto">
-                <div className="p-4 border-b flex justify-between items-center sticky top-0 bg-white">
-                  <h3 className="font-semibold text-gray-800">
-                    Resultados de búsqueda: "{searchTerm}"
-                  </h3>
-                  <button onClick={() => setShowSearch(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+              <div className="max-w-2xl mx-auto mt-4 bg-white rounded-lg shadow-lg text-left max-h-80 overflow-y-auto">
+                <div className="px-2 py-1 border-b flex justify-between items-center sticky top-0 bg-white">
+                  <span className="search-result-header">
+                    🔍 "{searchTerm}" - {searchResults.length} resultado(s)
+                  </span>
+                  <button onClick={() => setShowSearch(false)} className="text-gray-400 hover:text-gray-600 text-xs">✕</button>
                 </div>
                 {searchLoading ? (
-                  <div className="p-8 text-center text-gray-500">Buscando...</div>
+                  <div className="p-3 text-center text-gray-400 search-empty-message">Buscando...</div>
                 ) : searchResults.length === 0 ? (
-                  <div className="p-8 text-center text-gray-500">
-                    <p>No se encontraron resultados para <strong>"{searchTerm}"</strong></p>
-                    <p className="text-sm mt-2">💡 Sugerencia: Prueba con términos más cortos o sinónimos</p>
+                  <div className="p-3 text-center">
+                    <p className="search-empty-message text-gray-500">No se encontraron resultados</p>
+                    <p className="search-suggestion text-gray-400">💡 Prueba con otra palabra</p>
                   </div>
                 ) : (
                   <div>
-                    <div className="p-2 bg-gray-50 text-xs text-gray-500 border-b">
-                      {searchResults.length} resultado(s) encontrado(s)
-                    </div>
                     {searchResults.map(result => (
                       <Link
                         key={result.id}
                         to={`/lectura/${result.slug}`}
                         onClick={() => setShowSearch(false)}
-                        className="block p-4 hover:bg-gray-50 border-b last:border-b-0 transition"
+                        className="block px-3 py-1.5 hover:bg-gray-50 border-b last:border-b-0 transition"
                       >
-                        <p className="font-medium text-blue-600">{result.title}</p>
-                        <p className="text-sm text-gray-500 mt-1 line-clamp-2"
-                           dangerouslySetInnerHTML={{ 
-                             __html: highlightText(result.content?.substring(0, 200) || '') 
-                           }} />
+                        <p className="search-result-title font-medium text-blue-600">{result.title}</p>
+                        <p className="search-result-snippet line-clamp-1"
+                          dangerouslySetInnerHTML={{
+                            __html: highlightText(result.content?.substring(0, 120) || '')
+                          }} />
                       </Link>
                     ))}
                   </div>
@@ -168,7 +170,7 @@ function Home() {
             Una estructura completa que abarca desde los fundamentos teóricos hasta la gestión estratégica
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           {volumenes.map((vol, index) => {
             const colors = [
@@ -177,9 +179,9 @@ function Home() {
               { bg: "from-purple-500 to-purple-600", icon: "🏥", delay: "0.2s" }
             ]
             return (
-              <Link 
-                key={vol.id} 
-                to={`/volumen/${vol.number}`} 
+              <Link
+                key={vol.id}
+                to={`/volumen/${vol.number}`}
                 className="group transform transition-all duration-300 hover:-translate-y-2"
               >
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
@@ -222,7 +224,7 @@ function Home() {
             </Link>
 
             <div className="group text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300 cursor-pointer"
-                 onClick={() => document.querySelector('input[placeholder="Buscar en el libro..."]')?.focus()}>
+              onClick={() => document.querySelector('input[placeholder="Buscar en el libro..."]')?.focus()}>
               <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">🔍</div>
               <h3 className="font-semibold text-gray-800 mb-2">Búsqueda inteligente</h3>
               <p className="text-gray-500 text-sm">Busca cualquier palabra o concepto en el libro</p>
@@ -265,16 +267,16 @@ function VolumenPage() {
       .select('*')
       .eq('number', parseInt(id))
       .single()
-    
+
     setVolumen(volData)
-    
+
     if (volData) {
       const { data: capsData } = await supabase
         .from('chapters')
         .select('*')
         .eq('volume_id', volData.id)
         .order('order_index')
-      
+
       const capsConSecciones = await Promise.all(
         (capsData || []).map(async (cap) => {
           const { data: secsData } = await supabase
@@ -296,7 +298,7 @@ function VolumenPage() {
       <Link to="/" className="text-blue-600">← Volver</Link>
       <h1 className="text-3xl font-bold mt-4">Volumen {volumen.number}: {volumen.title}</h1>
       <p className="text-gray-600 mb-8">{volumen.description}</p>
-      
+
       {capitulos.map(cap => (
         <div key={cap.id} className="mb-8">
           <h2 className="text-2xl font-semibold mb-3">Capítulo {cap.number}: {cap.title}</h2>
@@ -363,7 +365,7 @@ function AdminPage() {
     const { data: { session } } = await supabase.auth.getSession()
     const usuario = session?.user ?? null
     setUser(usuario)
-    
+
     if (usuario) {
       const { data } = await supabase
         .from('admins')
@@ -397,7 +399,7 @@ function AdminPage() {
       .from('sections')
       .update({ title: editTitle, content: editContent })
       .eq('id', editing.id)
-    
+
     if (!error) {
       cargarSecciones()
       setEditing(null)
@@ -445,7 +447,7 @@ function AdminPage() {
         <button onClick={() => setEditing(null)} className="text-blue-600 mb-4">← Cancelar</button>
         <div className="bg-white rounded-lg shadow p-6 max-w-4xl mx-auto">
           <h1 className="text-2xl font-bold mb-4">Editando: {editing.title}</h1>
-          
+
           <div className="mb-4">
             <label className="block font-semibold mb-2">Título</label>
             <input
@@ -455,7 +457,7 @@ function AdminPage() {
               className="w-full border rounded-lg px-4 py-2"
             />
           </div>
-          
+
           <div className="mb-4">
             <label className="block font-semibold mb-2">Contenido (HTML)</label>
             <textarea
@@ -468,7 +470,7 @@ function AdminPage() {
               Puedes usar: &lt;h2&gt;, &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;
             </p>
           </div>
-          
+
           <button
             onClick={saveSection}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
@@ -485,7 +487,7 @@ function AdminPage() {
       <Link to="/dashboard" className="text-blue-600">← Volver al Dashboard</Link>
       <h1 className="text-3xl font-bold mt-4 mb-6">Panel de Administración</h1>
       <p className="text-gray-600 mb-4">Bienvenido, {user.email}</p>
-      
+
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50">

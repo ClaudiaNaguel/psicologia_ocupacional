@@ -148,3 +148,73 @@
     font-weight: bold;
   }
 }
+
+/* Estilos para resultados de búsqueda */
+.search-result-title {
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+}
+
+.search-result-snippet {
+  font-size: 0.7rem !important;
+  color: #6b7280 !important;
+  margin-top: 0.25rem !important;
+  line-height: 1.3 !important;
+}
+
+.search-result-count {
+  font-size: 0.65rem !important;
+  color: #6b7280 !important;
+}
+
+.search-result-header {
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+}
+
+.search-empty-message {
+  font-size: 0.75rem !important;
+}
+
+.search-suggestion {
+  font-size: 0.65rem !important;
+}
+
+/* Estilos para resultados de búsqueda - Títulos más pequeños */
+.search-result-title {
+  font-size: 0.7rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+.search-result-snippet {
+  font-size: 0.6rem !important;
+  color: #6b7280 !important;
+  margin-top: 0.2rem !important;
+  line-height: 1.2 !important;
+}
+
+.search-result-count {
+  font-size: 0.55rem !important;
+  color: #6b7280 !important;
+}
+
+.search-result-header {
+  font-size: 0.65rem !important;
+  font-weight: 600 !important;
+}
+
+.search-empty-message {
+  font-size: 0.65rem !important;
+}
+
+.search-suggestion {
+  font-size: 0.55rem !important;
+}
+
+/* Estilo para el mark dentro de resultados */
+.search-result-snippet mark {
+  font-size: 0.6rem !important;
+  background-color: #fef3c7 !important;
+  padding: 0 2px !important;
+}
