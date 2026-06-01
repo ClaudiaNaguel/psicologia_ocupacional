@@ -4,6 +4,8 @@ import { supabase } from './lib/supabaseClient'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import SubscribeForm from './components/SubscribeForm'
+
 
 function Home() {
   const [volumenes, setVolumenes] = useState([])
