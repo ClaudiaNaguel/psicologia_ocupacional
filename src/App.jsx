@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabaseClient'
-
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -29,15 +28,14 @@ function Home() {
             <Link to="/volumen/1" className="text-gray-700 hover:text-blue-600">Volumen I</Link>
             <Link to="/volumen/2" className="text-gray-700 hover:text-blue-600">Volumen II</Link>
             <Link to="/volumen/3" className="text-gray-700 hover:text-blue-600">Volumen III</Link>
-            <Link to="/admin" className="text-gray-700 hover:text-blue-600 bg-yellow-100 px-3 py-1 rounded-full">🔧 Admin</Link>
           </div>
         </div>
       </nav>
-
+      
       <div className="max-w-7xl mx-auto p-8">
         <h1 className="text-4xl font-bold mb-4">La Arquitectura del Trabajo</h1>
         <p className="text-xl mb-8">Psicología, Subjetividad y Dinámicas Organizacionales</p>
-
+        
         <div className="grid md:grid-cols-3 gap-6">
           {volumenes.map(vol => (
             <Link key={vol.id} to={`/volumen/${vol.number}`} className="bg-white p-6 rounded-lg shadow hover:shadow-lg">
@@ -67,16 +65,16 @@ function VolumenPage() {
       .select('*')
       .eq('number', parseInt(id))
       .single()
-
+    
     setVolumen(volData)
-
+    
     if (volData) {
       const { data: capsData } = await supabase
         .from('chapters')
         .select('*')
         .eq('volume_id', volData.id)
         .order('order_index')
-
+      
       const capsConSecciones = await Promise.all(
         (capsData || []).map(async (cap) => {
           const { data: secsData } = await supabase
@@ -98,7 +96,7 @@ function VolumenPage() {
       <Link to="/" className="text-blue-600">← Volver</Link>
       <h1 className="text-3xl font-bold mt-4">Volumen {volumen.number}: {volumen.title}</h1>
       <p className="text-gray-600 mb-8">{volumen.description}</p>
-
+      
       {capitulos.map(cap => (
         <div key={cap.id} className="mb-8">
           <h2 className="text-2xl font-semibold mb-3">Capítulo {cap.number}: {cap.title}</h2>
@@ -310,43 +308,6 @@ function AdminPage() {
                     ✏️ Editar
                   </button>
                 </td>
-               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-}
-
-  return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <Link to="/" className="text-blue-600">← Volver</Link>
-      <h1 className="text-3xl font-bold mt-4 mb-6">Panel de Administración</h1>
-      <p className="text-gray-600 mb-4">Bienvenido, {user.email}</p>
-
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left">Sección</th>
-              <th className="px-6 py-3 text-left">Slug</th>
-              <th className="px-6 py-3 text-left">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sections.map(section => (
-              <tr key={section.id} className="border-t">
-                <td className="px-6 py-4">{section.title}</td>
-                <td className="px-6 py-4 text-gray-500 text-sm">{section.slug}</td>
-                <td className="px-6 py-4">
-                  <button
-                    onClick={() => startEdit(section)}
-                    className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                  >
-                    ✏️ Editar
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -363,11 +324,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/volumen/:id" element={<VolumenPage />} />
         <Route path="/lectura/:slug" element={<LecturaPage />} />
-        <Route path="/admin" element={<AdminPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
-
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   )

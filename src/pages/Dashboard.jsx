@@ -10,25 +10,34 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (user) {
-      checkAdmin()
+      checkAdminStatus()
     } else {
       setLoading(false)
     }
   }, [user])
 
-  const checkAdmin = async () => {
+  const checkAdminStatus = async () => {
     try {
-      console.log('Verificando admin para:', user.id)
+      console.log('Verificando si es admin...', user.id)
+      
+      // Consulta directa a la tabla admins
       const { data, error } = await supabase
         .from('admins')
         .select('*')
         .eq('user_id', user.id)
-        .maybeSingle()
       
-      console.log('Resultado:', data)
-      setIsAdmin(!!data)
-    } catch (error) {
-      console.error('Error:', error)
+      console.log('Resultado de consulta:', data, error)
+      
+      if (data && data.length > 0) {
+        setIsAdmin(true)
+        console.log('✅ Es administrador')
+      } else {
+        setIsAdmin(false)
+        console.log('❌ No es administrador')
+      }
+    } catch (err) {
+      console.error('Error:', err)
+      setIsAdmin(false)
     } finally {
       setLoading(false)
     }
@@ -37,7 +46,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">Cargando...</div>
+        <div className="text-center">Verificando permisos...</div>
       </div>
     )
   }
