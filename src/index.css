@@ -20,7 +20,7 @@
   }
   
   a {
-    @apply text-primary-600 hover:text-primary-700 transition;
+    @apply text-blue-600 hover:text-blue-700 transition;
   }
 }
 
@@ -30,7 +30,7 @@
   }
   
   .btn-primary {
-    @apply bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition font-medium;
+    @apply bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-medium;
   }
   
   .btn-secondary {
@@ -40,152 +40,111 @@
   .card {
     @apply bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition;
   }
-}
-
-/* Mejoras de legibilidad */
-.prose p {
-  margin-bottom: 1.5em !important;
-  line-height: 1.7 !important;
-}
-
-.prose h2 {
-  margin-top: 2em !important;
-  margin-bottom: 0.75em !important;
-  font-size: 1.8rem !important;
-  border-left: 4px solid #3b82f6;
-  padding-left: 1rem;
-}
-
-.prose h3 {
-  margin-top: 1.5em !important;
-  margin-bottom: 0.5em !important;
-  font-size: 1.4rem !important;
-  color: #1e40af;
-}
-
-.prose h4 {
-  margin-top: 1.2em !important;
-  margin-bottom: 0.5em !important;
-  font-size: 1.2rem !important;
-  font-weight: 600;
-}
-
-/* Tarjetas para conceptos clave */
-.concept-card {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border-left: 4px solid #0284c7;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.concept-card h4 {
-  margin-top: 0 !important;
-  color: #0369a1;
-}
-
-/* Citas destacadas */
-.blockquote {
-  background: #f8fafc;
-  border-left: 4px solid #64748b;
-  padding: 1rem 1.5rem;
-  margin: 1.5rem 0;
-  font-style: italic;
-  color: #334155;
-  border-radius: 0 0.5rem 0.5rem 0;
-}
-
-/* Términos clave */
-.key-term {
-  background: #fef3c7;
-  color: #92400e;
-  padding: 0.1rem 0.3rem;
-  border-radius: 0.25rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.key-term:hover {
-  background: #fde68a;
-  transform: scale(1.02);
-}
-
-/* Notas al margen (en desktop) */
-@media (min-width: 1024px) {
-  .margin-note {
-    position: absolute;
-    right: -220px;
-    width: 200px;
-    background: #f1f5f9;
-    padding: 0.75rem;
+  
+  /* Tarjetas para conceptos clave */
+  .concept-card {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-left: 4px solid #0284c7;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
     border-radius: 0.5rem;
-    font-size: 0.8rem;
-    color: #475569;
-    border-left: 3px solid #3b82f6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   }
   
-  .has-margin-note {
+  .concept-card h4 {
+    margin-top: 0 !important;
+    color: #0369a1;
+  }
+  
+  /* Citas destacadas */
+  .blockquote {
+    background: #f8fafc;
+    border-left: 4px solid #64748b;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #334155;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  
+  /* Términos clave clickeables */
+  .key-term {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 1px dashed #d97706;
+    transition: all 0.2s;
+  }
+  
+  .key-term:hover {
+    background-color: #fde68a;
+    transform: scale(1.02);
+  }
+  
+  /* Línea de tiempo */
+  .timeline {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .timeline-item {
+    flex: 1;
+    text-align: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border-top: 3px solid #3b82f6;
+  }
+  
+  .timeline-year {
+    font-weight: bold;
+    color: #1e40af;
+    font-size: 1.2rem;
+  }
+  
+  /* Mejoras de legibilidad para el contenido del libro */
+  .prose p {
+    margin-bottom: 1.5em !important;
+    line-height: 1.7 !important;
+  }
+  
+  .prose h2 {
+    margin-top: 2em !important;
+    margin-bottom: 0.75em !important;
+    font-size: 1.8rem !important;
+    border-left: 4px solid #3b82f6;
+    padding-left: 1rem;
+  }
+  
+  .prose h3 {
+    margin-top: 1.5em !important;
+    margin-bottom: 0.5em !important;
+    font-size: 1.4rem !important;
+    color: #1e40af;
+  }
+  
+  .prose ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .prose ul li {
+    padding-left: 1.5rem;
     position: relative;
+    margin-bottom: 0.5rem;
   }
-}
-
-/* Línea de tiempo */
-.timeline {
-  display: flex;
-  justify-content: space-between;
-  margin: 2rem 0;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.timeline-item {
-  flex: 1;
-  text-align: center;
-  padding: 1rem;
-  background: #f8fafc;
-  border-radius: 0.5rem;
-  border-top: 3px solid #3b82f6;
-}
-
-.timeline-year {
-  font-weight: bold;
-  color: #1e40af;
-  font-size: 1.2rem;
-}
-
-/* Listas con íconos */
-.prose ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.prose ul li {
-  padding-left: 1.5rem;
-  position: relative;
-  margin-bottom: 0.5rem;
-}
-
-.prose ul li::before {
-  content: "→";
-  position: absolute;
-  left: 0;
-  color: #3b82f6;
-  font-weight: bold;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  
+  .prose ul li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #3b82f6;
+    font-weight: bold;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.3s ease-out;
 }

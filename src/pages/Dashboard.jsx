@@ -1,69 +1,86 @@
-import { useAuth } from '../hooks/useAuth'
-import { useSubscription } from '../hooks/useSubscription'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { supabase } from '../lib/supabaseClient'
+import { useAuth } from '../hooks/useAuth'
 
 export default function Dashboard() {
   const { user } = useAuth()
-  const { subscription, purchases, loading } = useSubscription()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (user) {
+      checkAdmin()
+    } else {
+      setLoading(false)
+    }
+  }, [user])
+
+  const checkAdmin = async () => {
+    try {
+      console.log('Verificando admin para:', user.id)
+      const { data, error } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      
+      console.log('Resultado:', data)
+      setIsAdmin(!!data)
+    } catch (error) {
+      console.error('Error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   if (loading) {
-    return <div className="container-custom py-12 text-center">Cargando...</div>
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">Cargando...</div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl mb-4">Debes iniciar sesión</p>
+          <Link to="/login" className="bg-blue-600 text-white px-6 py-2 rounded-lg">Iniciar Sesión</Link>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="container-custom py-12">
-      <h1 className="text-3xl font-bold mb-8">Mi Cuenta</h1>
-      
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* Información del Usuario */}
-        <div className="md:col-span-2">
-          <div className="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4">Información de la Cuenta</h2>
-            <p><strong>Email:</strong> {user?.email}</p>
-            <p><strong>Miembro desde:</strong> {new Date(user?.created_at).toLocaleDateString('es-AR')}</p>
-          </div>
-          
-          {/* Artículos Comprados */}
-          {purchases && purchases.length > 0 && (
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Artículos Comprados</h2>
-              <ul className="space-y-2">
-                {purchases.map(purchase => (
-                  <li key={purchase.id}>
-                    <Link to={`/articles/${purchase.article.slug}`} className="text-primary-600 hover:underline">
-                      {purchase.article.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+    <div className="min-h-screen bg-gray-100 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-4">Mi Cuenta</h1>
+        <p className="text-gray-600 mb-8">Bienvenido, {user.email}</p>
+        
+        <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Información de la cuenta</h2>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>ID:</strong> {user.id}</p>
+          <p><strong>Miembro desde:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
         </div>
         
-        {/* Estado de Suscripción */}
-        <div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">Plan Actual</h2>
-            {subscription?.status === 'active' ? (
-              <>
-                <p className="text-lg font-semibold text-green-600">Mensual Activo</p>
-                <p className="text-sm text-gray-600 mt-2">
-                  Válido hasta: {new Date(subscription.current_period_end).toLocaleDateString('es-AR')}
-                </p>
-                <button className="mt-4 text-red-600 text-sm hover:underline">
-                  Cancelar suscripción
-                </button>
-              </>
-            ) : (
-              <>
-                <p className="text-gray-600">Plan Gratuito</p>
-                <Link to="/pricing" className="btn-primary inline-block mt-4 text-center w-full">
-                  Suscribirse
-                </Link>
-              </>
-            )}
+        {isAdmin && (
+          <div className="bg-yellow-50 rounded-lg shadow p-6 border border-yellow-200">
+            <h2 className="text-xl font-semibold mb-4 text-yellow-800">🔧 Panel de Administración</h2>
+            <p className="text-gray-600 mb-4">Tienes acceso al panel de administración para editar el contenido del libro.</p>
+            <Link to="/admin" className="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 inline-block">
+              Ir al Admin
+            </Link>
           </div>
-        </div>
+        )}
+        
+        {!isAdmin && (
+          <div className="bg-gray-50 rounded-lg shadow p-6">
+            <p className="text-gray-500">Eres un usuario regular. No tienes permisos de administrador.</p>
+          </div>
+        )}
       </div>
     </div>
   )
