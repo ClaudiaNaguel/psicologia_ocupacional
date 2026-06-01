@@ -317,105 +317,38 @@ function VolumenPage() {
 }
 
 
-// Página de lectura
+// Página de lectura - VERSIÓN SIN BLOQUEO PREMIUM (para feedback)
 function LecturaPage() {
   const { slug } = useParams()
   const [seccion, setSeccion] = useState(null)
-  const [user, setUser] = useState(null)
-  const [hasAccess, setHasAccess] = useState(false)
 
   useEffect(() => {
-    verificarAcceso()
+    cargarSeccion()
   }, [slug])
 
-  const verificarAcceso = async () => {
-    // Obtener usuario actual
-    const { data: { session } } = await supabase.auth.getSession()
-    setUser(session?.user ?? null)
-
-    // Cargar sección
+  const cargarSeccion = async () => {
     const { data } = await supabase
       .from('sections')
       .select('*')
       .eq('slug', slug)
       .single()
-
     setSeccion(data)
-
-    // Verificar acceso
-    if (!data) return
-
-    // Si es free, acceso libre
-    if (data.tier === 'free') {
-      setHasAccess(true)
-      return
-    }
-
-    // Si es premium y hay usuario, verificar si es admin (por ahora)
-    if (session?.user) {
-      const { data: adminData } = await supabase
-        .from('admin_list')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .single()
-
-      setHasAccess(!!adminData)
-    } else {
-      setHasAccess(false)
-    }
   }
 
   if (!seccion) return <div className="p-8 text-center">Cargando...</div>
-
-  // Función para truncar contenido premium
-  const getTruncatedContent = () => {
-    if (!seccion.content) return '<p>Contenido próximamente...</p>'
-
-    // Si tiene acceso, mostrar todo
-    if (hasAccess) return seccion.content
-
-    // Si es free, mostrar todo
-    if (seccion.tier === 'free') return seccion.content
-
-    // Si es premium y no tiene acceso, truncar (primeros 500 caracteres)
-    const plainText = seccion.content.replace(/<[^>]*>/g, ' ')
-    const truncated = plainText.substring(0, 500)
-    const lastSpace = truncated.lastIndexOf(' ')
-    const finalText = truncated.substring(0, lastSpace)
-
-    return `
-      <div class="prose max-w-none">
-        <p>${finalText}...</p>
-      </div>
-      <div class="premium-block text-center mt-8 p-6 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl border border-yellow-200">
-        <div class="text-4xl mb-3">⭐</div>
-        <h3 class="text-xl font-bold text-gray-800 mb-2">Contenido Premium</h3>
-        <p class="text-gray-600 mb-4">Este artículo es parte del contenido exclusivo para suscriptores.</p>
-        <div class="flex flex-col sm:flex-row gap-3 justify-center">
-          <a href="/pricing" class="bg-yellow-500 text-gray-900 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-400 transition">
-            Suscribirse por $9.99/mes
-          </a>
-          <a href="/login" class="border-2 border-yellow-500 text-yellow-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-50 transition">
-            Iniciar Sesión
-          </a>
-        </div>
-        <p class="text-xs text-gray-400 mt-4">Accede a todos los artículos premium y contenido exclusivo</p>
-      </div>
-    `
-  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <Link to="/volumen/1" className="text-blue-600">← Volver</Link>
       <h1 className="text-3xl font-bold mt-4 mb-6">{seccion.title}</h1>
       <div className="bg-white p-8 rounded-lg shadow prose max-w-none">
-        <div dangerouslySetInnerHTML={{ __html: getTruncatedContent() }} />
+        <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p>Contenido próximamente...</p>' }} />
       </div>
-
-      {/* Badge premium si corresponde */}
-      {seccion.tier === 'premium' && !hasAccess && (
-        <div className="fixed bottom-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs shadow-lg">
-          ⭐ Premium
+      
+      {/* Badge informativo (sin bloqueo) */}
+      {seccion.tier === 'premium' && (
+        <div className="mt-4 text-center text-xs text-gray-400">
+          ⭐ Este artículo es premium (el bloqueo está desactivado temporalmente para feedback)
         </div>
       )}
     </div>
