@@ -1,10 +1,29 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { supabase } from '../lib/supabaseClient'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const { user, logout } = useAuth()
+
+  // Verificar si el usuario es administrador
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (!user) {
+        setIsAdmin(false)
+        return
+      }
+      const { data } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('user_id', user.id)
+        .single()
+      setIsAdmin(!!data)
+    }
+    checkAdmin()
+  }, [user])
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -17,8 +36,17 @@ export default function Header() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6 items-center">
-            <Link to="/articles" className="text-gray-700 hover:text-primary-600">Artículos</Link>
+            <Link to="/volumen/1" className="text-gray-700 hover:text-primary-600">Volumen I</Link>
+            <Link to="/volumen/2" className="text-gray-700 hover:text-primary-600">Volumen II</Link>
+            <Link to="/volumen/3" className="text-gray-700 hover:text-primary-600">Volumen III</Link>
             <Link to="/pricing" className="text-gray-700 hover:text-primary-600">Planes</Link>
+            
+            {/* Solo mostrar Admin si el usuario es administrador */}
+            {isAdmin && (
+              <Link to="/admin" className="text-gray-700 hover:text-primary-600 bg-yellow-100 px-3 py-1 rounded-full">
+                🔧 Admin
+              </Link>
+            )}
             
             {user ? (
               <>
@@ -44,8 +72,13 @@ export default function Header() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pt-4 border-t space-y-3">
-            <Link to="/articles" className="block text-gray-700">Artículos</Link>
+            <Link to="/volumen/1" className="block text-gray-700">Volumen I</Link>
+            <Link to="/volumen/2" className="block text-gray-700">Volumen II</Link>
+            <Link to="/volumen/3" className="block text-gray-700">Volumen III</Link>
             <Link to="/pricing" className="block text-gray-700">Planes</Link>
+            {isAdmin && (
+              <Link to="/admin" className="block text-yellow-600">🔧 Admin</Link>
+            )}
             {user ? (
               <>
                 <Link to="/dashboard" className="block text-gray-700">Mi Cuenta</Link>

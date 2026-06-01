@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabaseClient'
-import TermCard from './components/TermCard'
+import Admin from './pages/Admin'
+
 
 // Página de inicio
 function Home() {
@@ -182,6 +183,7 @@ function LecturaPage() {
   const { slug } = useParams()
   const [seccion, setSeccion] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [selectedTerm, setSelectedTerm] = useState(null)
 
   useEffect(() => {
     cargarSeccion()
@@ -205,6 +207,64 @@ function LecturaPage() {
     }
   }
 
+  // Procesar el contenido HTML para hacer los términos clickeables
+  const procesarContenido = (html) => {
+    if (!html) return ''
+    
+    const termsList = {
+      'experimentalismo': {
+        definition: 'Corriente psicológica que defiende el uso del método experimental para estudiar los procesos psicológicos. Busca establecer relaciones causa-efecto en condiciones controladas de laboratorio. Sus máximos exponentes fueron Wilhelm Wundt (primer laboratorio de psicología, 1879) y los estructuralistas.',
+        category: 'Corriente Psicológica'
+      },
+      'Gestalt': {
+        definition: 'Escuela psicológica alemana que sostiene que "el todo es más que la suma de las partes". Se centra en la percepción y la organización de la experiencia. Sus principales representantes son Max Wertheimer, Wolfgang Köhler y Kurt Koffka.',
+        category: 'Corriente Psicológica'
+      },
+      'psicoanálisis': {
+        definition: 'Teoría psicológica fundada por Sigmund Freud que estudia el inconsciente, los procesos psíquicos no conscientes y su influencia en la conducta. Introduce conceptos como ello, yo y superyó, mecanismos de defensa.',
+        category: 'Corriente Psicológica'
+      },
+      'conductismo': {
+        definition: 'Corriente psicológica fundada por John B. Watson que se centra en el estudio de la conducta observable, ignorando los procesos mentales internos. Su lema es "estímulo-respuesta". B.F. Skinner desarrolló el conductismo radical.',
+        category: 'Corriente Psicológica'
+      },
+      'Luis Leopold': {
+        definition: 'Psicólogo argentino, referente en psicología institucional y del trabajo. Propuso una redefinición de la psicología como "la ciencia que estudia a los individuos y las relaciones que estos sostienen para constituir, mantener y reproducir la vida institucional y organizacional".',
+        category: 'Autor'
+      },
+      'mundo del trabajo': {
+        definition: 'Concepto que abarca no solo el lugar físico donde se trabaja, sino todas las relaciones, normas, valores, conflictos y cooperaciones que constituyen la experiencia laboral.',
+        category: 'Concepto'
+      },
+      'dialéctica individuo-sociedad': {
+        definition: 'Concepto filosófico y sociológico que describe la relación de influencia mutua entre el individuo y la sociedad. El individuo construye la sociedad (externalización), la sociedad se le presenta como algo objetivo (objetivación), y luego la internaliza en su conciencia (internalización).',
+        category: 'Concepto Teórico'
+      }
+    }
+
+    let processedHtml = html
+    
+    Object.keys(termsList).forEach(term => {
+      const regex = new RegExp(`(${term})`, 'gi')
+      const termData = termsList[term]
+      processedHtml = processedHtml.replace(regex, (match) => {
+        return `<span class="clickable-term" data-term="${match}" data-definition="${termData.definition.replace(/"/g, '&quot;')}" data-category="${termData.category}" style="background-color:#fef3c7; color:#92400e; padding:0.1rem 0.3rem; border-radius:0.25rem; font-weight:500; cursor:pointer; border-bottom:1px dashed #d97706;">${match}</span>`
+      })
+    })
+    
+    return processedHtml
+  }
+
+  const handleTermClick = (e) => {
+    const target = e.target
+    if (target.classList && target.classList.contains('clickable-term')) {
+      const term = target.getAttribute('data-term')
+      const definition = target.getAttribute('data-definition')
+      const category = target.getAttribute('data-category')
+      setSelectedTerm({ term, definition, category })
+    }
+  }
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Cargando contenido...</div>
   }
@@ -217,6 +277,8 @@ function LecturaPage() {
       </div>
     )
   }
+
+  const processedContent = procesarContenido(seccion.content)
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -234,16 +296,50 @@ function LecturaPage() {
         </div>
       </nav>
 
-      <article className="max-w-3xl mx-auto py-12 px-4">
+      <article className="max-w-3xl mx-auto py-12 px-4" onClick={handleTermClick}>
         <Link to="/volumen/1" className="text-blue-600 hover:underline inline-flex items-center mb-6">← Volver al volumen</Link>
         <h1 className="text-3xl md:text-4xl font-bold mb-6">{seccion.title}</h1>
         <div className="prose prose-lg max-w-none bg-white p-8 rounded-lg shadow">
-          <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p>Contenido próximamente...</p>' }} />
+          <div dangerouslySetInnerHTML={{ __html: processedContent }} />
         </div>
         <div className="mt-8 pt-6 border-t text-center text-sm text-gray-500">
           <p>© 2026 - La Arquitectura del Trabajo - Claudia Nagüel</p>
         </div>
       </article>
+
+      {selectedTerm && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedTerm(null)}
+        >
+          <div 
+            className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-xl font-bold text-gray-900">{selectedTerm.term}</h3>
+              <button 
+                onClick={() => setSelectedTerm(null)}
+                className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <div className="text-gray-700 mb-4 leading-relaxed">
+              {selectedTerm.definition}
+            </div>
+            <div className="text-xs text-gray-400 mt-2 pt-2 border-t">
+              Categoría: {selectedTerm.category}
+            </div>
+            <button
+              onClick={() => setSelectedTerm(null)}
+              className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -255,6 +351,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/volumen/:id" element={<VolumenPage />} />
         <Route path="/lectura/:slug" element={<LecturaPage />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   )
