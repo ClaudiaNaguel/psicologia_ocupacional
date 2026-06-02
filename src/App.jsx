@@ -194,15 +194,17 @@ function Home() {
       </div>
 
       {/* Sección: Recorrido por el libro */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="text-center mb-12 fade-up">
-          <span className="text-blue-600 font-semibold text-sm uppercase tracking-wider">Guía de lectura</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-4">Recorrido por el libro</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto rounded-full"></div>
-          <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto">
-            Descubre qué contiene cada volumen antes de empezar a leer
-          </p>
-        </div>
+<div className="bg-gray-100 dark:bg-gray-800 py-16">
+  <div className="max-w-7xl mx-auto px-4">
+    <div className="text-center mb-12 fade-up">
+      <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm uppercase tracking-wider">Guía de lectura</span>
+      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mt-2 mb-4">Recorrido por el libro</h2>
+      <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto rounded-full"></div>
+      <p className="text-lg text-gray-600 dark:text-gray-300 mt-6 max-w-2xl mx-auto">
+        Descubre qué contiene cada volumen antes de empezar a leer
+      </p>
+    </div>
+</div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {/* Volumen 1 */}
