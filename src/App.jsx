@@ -193,57 +193,92 @@ function Home() {
         </div>
       </div>
 
-      {/* Sección de volúmenes mejorada */}
-      <div className="max-w-7xl mx-auto px-4 py-20 sm:py-28">
-        <div className="text-center mb-16 fade-up">
-          <span className="text-blue-600 font-semibold text-sm uppercase tracking-wider">Estructura completa</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-4">Los Tres Volúmenes</h2>
+      {/* Sección: Recorrido por el libro */}
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="text-center mb-12 fade-up">
+          <span className="text-blue-600 font-semibold text-sm uppercase tracking-wider">Guía de lectura</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-4">Recorrido por el libro</h2>
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto rounded-full"></div>
           <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto">
-            Una estructura que abarca desde los fundamentos teóricos hasta la gestión estratégica
+            Descubre qué contiene cada volumen antes de empezar a leer
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {volumenes.map((vol, index) => {
-            const colors = [
-              { bg: "from-blue-500 to-blue-600", icon: "📚", iconBg: "bg-blue-100", textColor: "text-blue-600", delay: "0s", title: "Fundamentos" },
-              { bg: "from-emerald-500 to-emerald-600", icon: "👥", iconBg: "bg-emerald-100", textColor: "text-emerald-600", delay: "0.1s", title: "Dinámicas" },
-              { bg: "from-purple-500 to-purple-600", icon: "🏥", iconBg: "bg-purple-100", textColor: "text-purple-600", delay: "0.2s", title: "Estrategias" }
-            ]
-            return (
-              <Link
-                key={vol.id}
-                to={`/volumen/${vol.number}`}
-                className="group transform transition-all duration-500 hover:-translate-y-3 fade-up"
-                style={{ animationDelay: colors[index].delay }}
-              >
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 h-full border border-gray-100">
-                  <div className={`bg-gradient-to-r ${colors[index].bg} p-6 text-white relative overflow-hidden`}>
-                    <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                    <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full"></div>
-                    <div className="relative z-10">
-                      <div className={`w-16 h-16 ${colors[index].iconBg} rounded-2xl flex items-center justify-center mb-4 shadow-lg`}>
-                        <span className={`text-3xl ${colors[index].textColor}`}>{colors[index].icon}</span>
-                      </div>
-                      <h3 className="text-3xl font-bold">Volumen {vol.number}</h3>
-                      <p className="text-white/80 text-sm mt-1">{colors[index].title}</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <p className="text-gray-800 font-semibold text-lg mb-2 line-clamp-2">{vol.title}</p>
-                    <p className="text-gray-500 text-sm leading-relaxed">{vol.description}</p>
-                    <div className="mt-5 flex items-center text-blue-600 group-hover:text-blue-700 font-medium">
-                      <span className="text-sm">Explorar volumen</span>
-                      <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Volumen 1 */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 fade-up">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white">
+              <div className="flex justify-between items-center">
+                <span className="text-3xl">📚</span>
+                <span className="text-sm bg-white/20 px-3 py-1 rounded-full">Volumen I</span>
+              </div>
+              <h3 className="text-xl font-bold mt-3">Fundamentos Teóricos</h3>
+              <p className="text-blue-100 text-sm">Psicología del Trabajo</p>
+            </div>
+            <div className="p-5">
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Establece la base científica de la disciplina. Explora cómo el ser humano construye su realidad social y analiza la evolución histórica del trabajo, desde el higienismo del siglo XIX hasta la psicodinámica de Dejours.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">🧠 Subjetividad</span>
+                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">📜 Historia</span>
+                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">🔄 Dialéctica</span>
+              </div>
+              <Link to="/volumen/1" className="mt-4 inline-flex items-center text-blue-600 text-sm font-medium hover:text-blue-700">
+                Explorar volumen →
               </Link>
-            )
-          })}
+            </div>
+          </div>
+
+          {/* Volumen 2 */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 fade-up" style={{ animationDelay: "0.1s" }}>
+            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-4 text-white">
+              <div className="flex justify-between items-center">
+                <span className="text-3xl">👥</span>
+                <span className="text-sm bg-white/20 px-3 py-1 rounded-full">Volumen II</span>
+              </div>
+              <h3 className="text-xl font-bold mt-3">Dinámicas de Grupo</h3>
+              <p className="text-emerald-100 text-sm">Liderazgo y Talento</p>
+            </div>
+            <div className="p-5">
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Analiza la trama colectiva (equipos, clima grupal, seguridad psicológica) y el rol del liderazgo. Aborda la psicometría, la descripción de puestos y la selección por competencias.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">🏆 Liderazgo</span>
+                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">📊 Psicometría</span>
+                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">🎯 Competencias</span>
+              </div>
+              <Link to="/volumen/2" className="mt-4 inline-flex items-center text-emerald-600 text-sm font-medium hover:text-emerald-700">
+                Explorar volumen →
+              </Link>
+            </div>
+          </div>
+
+          {/* Volumen 3 */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 fade-up" style={{ animationDelay: "0.2s" }}>
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 text-white">
+              <div className="flex justify-between items-center">
+                <span className="text-3xl">🏥</span>
+                <span className="text-sm bg-white/20 px-3 py-1 rounded-full">Volumen III</span>
+              </div>
+              <h3 className="text-xl font-bold mt-3">Salud Ocupacional</h3>
+              <p className="text-purple-100 text-sm">Clima y Estrategia</p>
+            </div>
+            <div className="p-5">
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Desarrolla la Salud Mental Positiva Ocupacional, la gestión de riesgos (modelo Demanda-Control) y estrategias de intervención. Aborda clima, cultura y cambio organizacional.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">🧘 Salud mental</span>
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">⚠️ Riesgos</span>
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">🔄 Cambio</span>
+              </div>
+              <Link to="/volumen/3" className="mt-4 inline-flex items-center text-purple-600 text-sm font-medium hover:text-purple-700">
+                Explorar volumen →
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
