@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom'
 import Hero from '../components/Hero'
 import ArticleList from '../components/ArticleList'
 import SubscribeForm from '../components/SubscribeForm'
+import DarkModeToggle from '../components/DarkModeToggle'
+import ThemeSelector from '../components/ThemeSelector'
+
 
 export default function Home() {
   return (
@@ -28,6 +31,10 @@ export default function Home() {
           <SubscribeForm />
         </div>
       </section>
+      
+      <ThemeSelector />
+
+      <DarkModeToggle />
     </div>
   )
 }

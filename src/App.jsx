@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import SubscribeForm from './components/SubscribeForm'
+import ThemeSelector from './components/ThemeSelector'
 
 function Home() {
   const [volumenes, setVolumenes] = useState([])
@@ -22,7 +23,6 @@ function Home() {
     setVolumenes(data || [])
   }
 
-  // Función para quitar tildes y normalizar texto
   const normalizeText = (text) => {
     if (!text) return ''
     return text
@@ -38,27 +38,19 @@ function Home() {
     setSearchLoading(true)
 
     const searchNormalized = normalizeText(searchTerm)
-
-    // Traer todas las secciones
-    const { data } = await supabase
-      .from('sections')
-      .select('*')
-      .limit(100)
+    const { data } = await supabase.from('sections').select('*').limit(100)
 
     if (data) {
-      // Filtrar por título o contenido (ignorando tildes)
       const results = data.filter(section => {
         const titleNormalized = normalizeText(section.title)
         const contentNormalized = normalizeText(section.content || '')
-        return titleNormalized.includes(searchNormalized) ||
-          contentNormalized.includes(searchNormalized)
+        return titleNormalized.includes(searchNormalized) || contentNormalized.includes(searchNormalized)
       })
       setSearchResults(results)
     }
     setSearchLoading(false)
   }
 
-  // Función para destacar la palabra buscada
   const highlightText = (text) => {
     if (!text) return ''
     try {
@@ -68,7 +60,6 @@ function Home() {
       return text
     }
   }
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -112,17 +103,17 @@ function Home() {
             {showSearch && (
               <div className="max-w-2xl mx-auto mt-4 bg-white rounded-lg shadow-lg text-left max-h-80 overflow-y-auto">
                 <div className="px-2 py-1 border-b flex justify-between items-center sticky top-0 bg-white">
-                  <span className="search-result-header">
+                  <span className="text-xs font-semibold">
                     🔍 "{searchTerm}" - {searchResults.length} resultado(s)
                   </span>
                   <button onClick={() => setShowSearch(false)} className="text-gray-400 hover:text-gray-600 text-xs">✕</button>
                 </div>
                 {searchLoading ? (
-                  <div className="p-3 text-center text-gray-400 search-empty-message">Buscando...</div>
+                  <div className="p-3 text-center text-gray-400 text-xs">Buscando...</div>
                 ) : searchResults.length === 0 ? (
                   <div className="p-3 text-center">
-                    <p className="search-empty-message text-gray-500">No se encontraron resultados</p>
-                    <p className="search-suggestion text-gray-400">💡 Prueba con otra palabra</p>
+                    <p className="text-xs text-gray-500">No se encontraron resultados</p>
+                    <p className="text-xs text-gray-400">💡 Prueba con otra palabra</p>
                   </div>
                 ) : (
                   <div>
@@ -133,8 +124,8 @@ function Home() {
                         onClick={() => setShowSearch(false)}
                         className="block px-3 py-1.5 hover:bg-gray-50 border-b last:border-b-0 transition"
                       >
-                        <p className="search-result-title font-medium text-blue-600">{result.title}</p>
-                        <p className="search-result-snippet line-clamp-1"
+                        <p className="text-xs font-medium text-blue-600">{result.title}</p>
+                        <p className="text-xs text-gray-500 line-clamp-1"
                           dangerouslySetInnerHTML={{
                             __html: highlightText(result.content?.substring(0, 120) || '')
                           }} />
@@ -247,6 +238,9 @@ function Home() {
           <p className="text-sm mt-2">La Arquitectura del Trabajo: Psicología, Subjetividad y Dinámicas Organizacionales</p>
         </div>
       </footer>
+
+      {/* ThemeSelector - Botón de modo oscuro */}
+      <ThemeSelector />
     </div>
   )
 }
@@ -312,12 +306,12 @@ function VolumenPage() {
           </div>
         </div>
       ))}
+      <ThemeSelector />
     </div>
   )
 }
 
-
-// Página de lectura - VERSIÓN SIN BLOQUEO PREMIUM (para feedback)
+// Página de lectura
 function LecturaPage() {
   const { slug } = useParams()
   const [seccion, setSeccion] = useState(null)
@@ -345,17 +339,17 @@ function LecturaPage() {
         <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p>Contenido próximamente...</p>' }} />
       </div>
       
-      {/* Badge informativo (sin bloqueo) */}
       {seccion.tier === 'premium' && (
         <div className="mt-4 text-center text-xs text-gray-400">
           ⭐ Este artículo es premium (el bloqueo está desactivado temporalmente para feedback)
         </div>
       )}
+      <ThemeSelector />
     </div>
   )
 }
 
-// Panel de Administración (solo para admins)
+// Panel de Administración
 function AdminPage() {
   const [sections, setSections] = useState([])
   const [editing, setEditing] = useState(null)
@@ -523,6 +517,7 @@ function AdminPage() {
           </tbody>
         </table>
       </div>
+      <ThemeSelector />
     </div>
   )
 }

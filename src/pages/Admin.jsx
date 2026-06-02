@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../hooks/useAuth'
 import { Link } from 'react-router-dom'
+import DarkModeToggle from '../components/DarkModeToggle'
+import ThemeSelector from '../components/ThemeSelector'
+
+
 
 export default function Admin() {
   const { user } = useAuth()
@@ -150,6 +154,7 @@ export default function Admin() {
             </div>
           </div>
         </div>
+        <DarkModeToggle />
       </div>
     )
   }
@@ -207,6 +212,9 @@ export default function Admin() {
           </ul>
         </div>
       </div>
+      <DarkModeToggle />
+      <ThemeSelector />
+
     </div>
   )
 }

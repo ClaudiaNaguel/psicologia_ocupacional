@@ -1,4 +1,7 @@
 import ArticleList from '../components/ArticleList'
+import DarkModeToggle from '../components/DarkModeToggle'
+import ThemeSelector from '../components/ThemeSelector'
+
 
 export default function Articles() {
   return (
@@ -9,6 +12,8 @@ export default function Articles() {
           <p className="text-gray-600 mt-2">Explora el contenido completo de "La Arquitectura del Trabajo"</p>
         </div>
         <ArticleList />
+        <DarkModeToggle />
+        <ThemeSelector />
       </div>
     </div>
   )

@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../hooks/useAuth'
+import DarkModeToggle from '../components/DarkModeToggle'
+import ThemeSelector from '../components/ThemeSelector'
+
 
 export default function Dashboard() {
   const { user } = useAuth()
@@ -20,7 +23,6 @@ export default function Dashboard() {
     try {
       console.log('Verificando si es admin...', user.id)
       
-      // Consulta directa a la tabla admins
       const { data, error } = await supabase
         .from('admins')
         .select('*')
@@ -91,6 +93,8 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+      <DarkModeToggle />
+      <ThemeSelector />
     </div>
   )
 }
