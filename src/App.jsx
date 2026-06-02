@@ -24,15 +24,18 @@ function Home() {
         }
       })
     }, { threshold: 0.1 })
-    
+
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el))
     return () => observer.disconnect()
   }, [])
 
   const cargarVolumenes = async () => {
     const { data } = await supabase.from('volumes').select('*').order('order_index')
+    console.log('Volúmenes cargados:', data)  // <-- Agrega esta línea
     setVolumenes(data || [])
   }
+
+
 
   const normalizeText = (text) => {
     if (!text) return ''
@@ -75,13 +78,13 @@ function Home() {
           <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1" fill="white"/>
+                <circle cx="2" cy="2" r="1" fill="white" />
               </pattern>
             </defs>
-            <rect width="1000" height="1000" fill="url(#dots)"/>
+            <rect width="1000" height="1000" fill="url(#dots)" />
           </svg>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 py-24 sm:py-32">
           <div className="text-center fade-up">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
@@ -89,17 +92,17 @@ function Home() {
               <span className="text-white/40">•</span>
               <span className="text-blue-200 text-sm">3 volúmenes</span>
             </div>
-            
+
             <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
               La Arquitectura del Trabajo
             </h1>
-            
+
             <p className="text-xl md:text-2xl mb-6 text-blue-100 max-w-3xl mx-auto">
               Psicología, Subjetividad y Dinámicas Organizacionales
             </p>
-            
+
             <p className="text-lg mb-10 text-blue-200 max-w-2xl mx-auto">
-              Una obra completa de <strong className="text-white font-semibold">Claudia Nagüel</strong> sobre psicología del trabajo, 
+              Una obra completa de <strong className="text-white font-semibold">Claudia Nagüel</strong> sobre psicología del trabajo,
               salud ocupacional y gestión organizacional.
             </p>
 
@@ -181,7 +184,7 @@ function Home() {
             </div>
           </div>
         </div>
-        
+
         {/* Ola decorativa */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg className="w-full h-16 text-gray-50 dark:text-gray-800" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -255,7 +258,7 @@ function Home() {
               Contenido interactivo y herramientas para profesionales y estudiantes
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* Contenido completo */}
             <Link to="/volumen/1" className="group text-center p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 fade-up">
@@ -416,7 +419,7 @@ function LecturaPage() {
       <div className="bg-white p-8 rounded-lg shadow prose max-w-none">
         <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p>Contenido próximamente...</p>' }} />
       </div>
-      
+
       {seccion.tier === 'premium' && (
         <div className="mt-4 text-center text-xs text-gray-400">
           ⭐ Este artículo es premium (el bloqueo está desactivado temporalmente para feedback)
