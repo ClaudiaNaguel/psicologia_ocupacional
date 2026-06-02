@@ -16,6 +16,17 @@ function Home() {
 
   useEffect(() => {
     cargarVolumenes()
+    // Efecto de aparición para elementos
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible')
+        }
+      })
+    }, { threshold: 0.1 })
+    
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el))
+    return () => observer.disconnect()
   }, [])
 
   const cargarVolumenes = async () => {
@@ -25,21 +36,15 @@ function Home() {
 
   const normalizeText = (text) => {
     if (!text) return ''
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9\s]/g, "")
+    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, "")
   }
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return
     setShowSearch(true)
     setSearchLoading(true)
-
     const searchNormalized = normalizeText(searchTerm)
     const { data } = await supabase.from('sections').select('*').limit(100)
-
     if (data) {
       const results = data.filter(section => {
         const titleNormalized = normalizeText(section.title)
@@ -55,7 +60,7 @@ function Home() {
     if (!text) return ''
     try {
       const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-      return text.replace(regex, '<mark style="background-color:#fef3c7; font-size:0.6rem; padding:0 2px;">$1</mark>')
+      return text.replace(regex, '<mark style="background-color:#fef3c7; padding:0 2px; border-radius:4px;">$1</mark>')
     } catch {
       return text
     }
@@ -63,57 +68,81 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-900 to-blue-700 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-20"></div>
+      {/* Hero Section Mejorada */}
+      <div className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden">
+        {/* Fondo con patrones */}
+        <div className="absolute inset-0 opacity-10">
+          <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1" fill="white"/>
+              </pattern>
+            </defs>
+            <rect width="1000" height="1000" fill="url(#dots)"/>
+          </svg>
+        </div>
+        
         <div className="relative max-w-7xl mx-auto px-4 py-24 sm:py-32">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
+          <div className="text-center fade-up">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
+              <span className="text-yellow-400 text-sm">📚 Obra completa</span>
+              <span className="text-white/40">•</span>
+              <span className="text-blue-200 text-sm">3 volúmenes</span>
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
               La Arquitectura del Trabajo
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
+            
+            <p className="text-xl md:text-2xl mb-6 text-blue-100 max-w-3xl mx-auto">
               Psicología, Subjetividad y Dinámicas Organizacionales
             </p>
-            <p className="text-lg mb-12 text-blue-200 max-w-2xl mx-auto">
-              Una obra completa de <strong className="text-white">Claudia Nagüel</strong> sobre psicología del trabajo,
+            
+            <p className="text-lg mb-10 text-blue-200 max-w-2xl mx-auto">
+              Una obra completa de <strong className="text-white font-semibold">Claudia Nagüel</strong> sobre psicología del trabajo, 
               salud ocupacional y gestión organizacional.
             </p>
 
             {/* Buscador */}
-            <div className="max-w-md mx-auto mb-8">
-              <div className="flex gap-2">
+            <div className="max-w-lg mx-auto mb-8">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                   placeholder="Buscar en el libro..."
-                  className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-12 pr-28 py-4 rounded-2xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-xl"
                 />
                 <button
                   onClick={handleSearch}
-                  className="bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400 transition"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-5 py-2 rounded-xl font-medium hover:shadow-lg transition-all"
                 >
-                  🔍 Buscar
+                  Buscar
                 </button>
               </div>
             </div>
 
             {/* Resultados de búsqueda */}
             {showSearch && (
-              <div className="max-w-2xl mx-auto mt-4 bg-white rounded-lg shadow-lg text-left max-h-80 overflow-y-auto">
-                <div className="px-2 py-1 border-b flex justify-between items-center sticky top-0 bg-white">
-                  <span className="text-xs font-semibold">
+              <div className="max-w-2xl mx-auto mt-4 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl text-left max-h-96 overflow-y-auto border border-gray-200">
+                <div className="px-4 py-3 border-b flex justify-between items-center sticky top-0 bg-white/95 rounded-t-2xl">
+                  <span className="text-sm font-semibold text-gray-700">
                     🔍 "{searchTerm}" - {searchResults.length} resultado(s)
                   </span>
-                  <button onClick={() => setShowSearch(false)} className="text-gray-400 hover:text-gray-600 text-xs">✕</button>
+                  <button onClick={() => setShowSearch(false)} className="text-gray-400 hover:text-gray-600 transition-colors">✕</button>
                 </div>
                 {searchLoading ? (
-                  <div className="p-3 text-center text-gray-400 text-xs">Buscando...</div>
+                  <div className="p-8 text-center text-gray-500">Buscando...</div>
                 ) : searchResults.length === 0 ? (
-                  <div className="p-3 text-center">
-                    <p className="text-xs text-gray-500">No se encontraron resultados</p>
-                    <p className="text-xs text-gray-400">💡 Prueba con otra palabra</p>
+                  <div className="p-8 text-center">
+                    <p className="text-gray-500">No se encontraron resultados</p>
+                    <p className="text-sm text-gray-400 mt-1">💡 Prueba con otra palabra</p>
                   </div>
                 ) : (
                   <div>
@@ -122,12 +151,12 @@ function Home() {
                         key={result.id}
                         to={`/lectura/${result.slug}`}
                         onClick={() => setShowSearch(false)}
-                        className="block px-3 py-1.5 hover:bg-gray-50 border-b last:border-b-0 transition"
+                        className="block px-4 py-3 hover:bg-gray-50 border-b last:border-b-0 transition"
                       >
-                        <p className="text-xs font-medium text-blue-600">{result.title}</p>
-                        <p className="text-xs text-gray-500 line-clamp-1"
+                        <p className="font-medium text-blue-600 text-sm">{result.title}</p>
+                        <p className="text-xs text-gray-500 mt-1 line-clamp-1"
                           dangerouslySetInnerHTML={{
-                            __html: highlightText(result.content?.substring(0, 120) || '')
+                            __html: highlightText(result.content?.substring(0, 100) || '')
                           }} />
                       </Link>
                     ))}
@@ -136,56 +165,74 @@ function Home() {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Link to="/volumen/1" className="bg-white text-blue-700 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition transform hover:scale-105 inline-flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
+              <Link to="/volumen/1" className="group bg-white text-blue-700 px-8 py-3.5 rounded-full font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg inline-flex items-center gap-2">
                 📖 Comenzar a leer
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </Link>
-              <Link to="/pricing" className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-700 transition transform hover:scale-105 inline-flex items-center gap-2">
+              <Link to="/pricing" className="group border-2 border-white text-white px-8 py-3.5 rounded-full font-semibold hover:bg-white hover:text-blue-700 transition-all transform hover:scale-105 inline-flex items-center gap-2">
                 ⭐ Ver planes
+                <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5-5 5" />
+                </svg>
               </Link>
             </div>
           </div>
         </div>
+        
+        {/* Ola decorativa */}
         <div className="absolute bottom-0 left-0 right-0">
-          <svg className="w-full h-12 text-gray-50" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <svg className="w-full h-16 text-gray-50 dark:text-gray-800" viewBox="0 0 1200 120" preserveAspectRatio="none">
             <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
           </svg>
         </div>
       </div>
 
-      {/* Sección de volúmenes */}
-      <div className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Los Tres Volúmenes</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Una estructura completa que abarca desde los fundamentos teóricos hasta la gestión estratégica
+      {/* Sección de volúmenes mejorada */}
+      <div className="max-w-7xl mx-auto px-4 py-20 sm:py-28">
+        <div className="text-center mb-16 fade-up">
+          <span className="text-blue-600 font-semibold text-sm uppercase tracking-wider">Estructura completa</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-4">Los Tres Volúmenes</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto rounded-full"></div>
+          <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto">
+            Una estructura que abarca desde los fundamentos teóricos hasta la gestión estratégica
           </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {volumenes.map((vol, index) => {
             const colors = [
-              { bg: "from-blue-500 to-blue-600", icon: "📚", delay: "0s" },
-              { bg: "from-green-500 to-green-600", icon: "👥", delay: "0.1s" },
-              { bg: "from-purple-500 to-purple-600", icon: "🏥", delay: "0.2s" }
+              { bg: "from-blue-500 to-blue-600", icon: "📚", iconBg: "bg-blue-100", textColor: "text-blue-600", delay: "0s", title: "Fundamentos" },
+              { bg: "from-emerald-500 to-emerald-600", icon: "👥", iconBg: "bg-emerald-100", textColor: "text-emerald-600", delay: "0.1s", title: "Dinámicas" },
+              { bg: "from-purple-500 to-purple-600", icon: "🏥", iconBg: "bg-purple-100", textColor: "text-purple-600", delay: "0.2s", title: "Estrategias" }
             ]
             return (
               <Link
                 key={vol.id}
                 to={`/volumen/${vol.number}`}
-                className="group transform transition-all duration-300 hover:-translate-y-2"
+                className="group transform transition-all duration-500 hover:-translate-y-3 fade-up"
+                style={{ animationDelay: colors[index].delay }}
               >
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
-                  <div className={`bg-gradient-to-r ${colors[index].bg} p-6 text-white`}>
-                    <div className="text-5xl mb-4">{colors[index].icon}</div>
-                    <h3 className="text-2xl font-bold">Volumen {vol.number}</h3>
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 h-full border border-gray-100">
+                  <div className={`bg-gradient-to-r ${colors[index].bg} p-6 text-white relative overflow-hidden`}>
+                    <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                    <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full"></div>
+                    <div className="relative z-10">
+                      <div className={`w-16 h-16 ${colors[index].iconBg} rounded-2xl flex items-center justify-center mb-4 shadow-lg`}>
+                        <span className={`text-3xl ${colors[index].textColor}`}>{colors[index].icon}</span>
+                      </div>
+                      <h3 className="text-3xl font-bold">Volumen {vol.number}</h3>
+                      <p className="text-white/80 text-sm mt-1">{colors[index].title}</p>
+                    </div>
                   </div>
                   <div className="p-6">
-                    <p className="text-gray-800 font-semibold mb-2">{vol.title}</p>
-                    <p className="text-gray-500 text-sm">{vol.description}</p>
-                    <div className="mt-4 flex items-center text-blue-600 group-hover:text-blue-700">
-                      <span className="text-sm font-medium">Explorar</span>
-                      <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <p className="text-gray-800 font-semibold text-lg mb-2 line-clamp-2">{vol.title}</p>
+                    <p className="text-gray-500 text-sm leading-relaxed">{vol.description}</p>
+                    <div className="mt-5 flex items-center text-blue-600 group-hover:text-blue-700 font-medium">
+                      <span className="text-sm">Explorar volumen</span>
+                      <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
@@ -197,49 +244,80 @@ function Home() {
         </div>
       </div>
 
-      {/* Sección de características interactivas */}
-      <div className="bg-white py-16">
+      {/* Sección de características interactivas mejorada */}
+      <div className="bg-gradient-to-br from-gray-50 to-white py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">¿Qué encontrarás?</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+          <div className="text-center mb-16 fade-up">
+            <span className="text-blue-600 font-semibold text-sm uppercase tracking-wider">Características</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2 mb-4">¿Qué encontrarás?</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto rounded-full"></div>
+            <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto">
               Contenido interactivo y herramientas para profesionales y estudiantes
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <Link to="/volumen/1" className="group text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300">
-              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">📖</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Contenido completo</h3>
-              <p className="text-gray-500 text-sm">Los 3 volúmenes completos del libro</p>
-              <span className="inline-block mt-3 text-blue-600 text-sm opacity-0 group-hover:opacity-100 transition">Explorar →</span>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Contenido completo */}
+            <Link to="/volumen/1" className="group text-center p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 fade-up">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform">
+                <div className="text-4xl">📖</div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Contenido completo</h3>
+              <p className="text-gray-500 text-sm">Los 3 volúmenes completos del libro con acceso a todo el material</p>
+              <span className="inline-block mt-4 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">Explorar →</span>
             </Link>
 
-            <div className="group text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300 cursor-pointer"
+            {/* Búsqueda inteligente */}
+            <div className="group text-center p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer fade-up"
               onClick={() => document.querySelector('input[placeholder="Buscar en el libro..."]')?.focus()}>
-              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">🔍</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Búsqueda inteligente</h3>
-              <p className="text-gray-500 text-sm">Busca cualquier palabra o concepto en el libro</p>
-              <span className="inline-block mt-3 text-blue-600 text-sm opacity-0 group-hover:opacity-100 transition">Buscar ahora →</span>
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform">
+                <div className="text-4xl">🔍</div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Búsqueda inteligente</h3>
+              <p className="text-gray-500 text-sm">Busca cualquier palabra o concepto en todo el libro</p>
+              <span className="inline-block mt-4 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">Buscar ahora →</span>
             </div>
 
-            <Link to="/pricing" className="group text-center p-6 rounded-xl hover:bg-gray-50 transition-all duration-300">
-              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform duration-300">⭐</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Contenido premium</h3>
-              <p className="text-gray-500 text-sm">Accede a capítulos exclusivos</p>
-              <span className="inline-block mt-3 text-blue-600 text-sm opacity-0 group-hover:opacity-100 transition">Ver planes →</span>
+            {/* Contenido premium */}
+            <Link to="/pricing" className="group text-center p-8 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 fade-up">
+              <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform">
+                <div className="text-4xl">⭐</div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Contenido premium</h3>
+              <p className="text-gray-500 text-sm">Accede a capítulos exclusivos y material complementario</p>
+              <span className="inline-block mt-4 text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">Ver planes →</span>
             </Link>
           </div>
         </div>
       </div>
 
-      <footer className="bg-gray-900 text-gray-400 py-8">
+      {/* Newsletter Section mejorada */}
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 text-white py-16">
+        <div className="max-w-3xl mx-auto px-4 text-center fade-up">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
+            <span className="text-2xl">📧</span>
+            <span className="text-sm">Mantente informado</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Newsletter</h2>
+          <p className="text-gray-300 mb-8">
+            Recibe los resúmenes y novedades directamente en tu correo
+          </p>
+          <SubscribeForm />
+        </div>
+      </div>
+
+      <footer className="bg-gray-900 text-gray-400 py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="flex justify-center space-x-6 mb-6">
+            <span className="text-2xl">📚</span>
+            <span className="text-2xl">🏥</span>
+            <span className="text-2xl">👥</span>
+          </div>
           <p>© 2026 Claudia Nagüel - Buenos Aires, Argentina</p>
-          <p className="text-sm mt-2">La Arquitectura del Trabajo: Psicología, Subjetividad y Dinámicas Organizacionales</p>
+          <p className="text-sm mt-2 text-gray-500">La Arquitectura del Trabajo: Psicología, Subjetividad y Dinámicas Organizacionales</p>
         </div>
       </footer>
 
-      {/* ThemeSelector - Botón de modo oscuro */}
       <ThemeSelector />
     </div>
   )
