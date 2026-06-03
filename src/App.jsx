@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import SubscribeForm from './components/SubscribeForm'
 import ThemeSelector from './components/ThemeSelector'
 import ScrollToTop from './components/ScrollToTop'
+import SuggestionForm from './components/SuggestionForm'
 
 
 function Home() {
@@ -83,13 +84,13 @@ function Home() {
           <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1" fill="white"/>
+                <circle cx="2" cy="2" r="1" fill="white" />
               </pattern>
             </defs>
-            <rect width="1000" height="1000" fill="url(#dots)"/>
+            <rect width="1000" height="1000" fill="url(#dots)" />
           </svg>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-28 lg:py-32">
           <div className="text-center fade-up">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6 animate-pulse">
@@ -97,17 +98,17 @@ function Home() {
               <span className="text-white/40">•</span>
               <span className="text-blue-200 text-sm">3 volúmenes</span>
             </div>
-            
+
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
               La Arquitectura del Trabajo
             </h1>
-            
+
             <p className="text-lg sm:text-xl md:text-2xl mb-6 text-blue-100 max-w-3xl mx-auto">
               Psicología, Subjetividad y Dinámicas Organizacionales
             </p>
-            
+
             <p className="text-base sm:text-lg mb-8 text-blue-200 max-w-2xl mx-auto">
-              Una obra completa de <strong className="text-white font-semibold">Claudia Nagüel</strong> sobre psicología del trabajo, 
+              Una obra completa de <strong className="text-white font-semibold">Claudia Nagüel</strong> sobre psicología del trabajo,
               salud ocupacional y gestión organizacional.
             </p>
 
@@ -191,7 +192,7 @@ function Home() {
             )}
           </div>
         </div>
-        
+
         {/* Ola decorativa */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg className="w-full h-12 text-gray-50 dark:text-gray-900" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -247,7 +248,7 @@ function Home() {
                   <span className="text-xs bg-blue-100 dark:bg-gray-800 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full">🔄 Dialéctica</span>
                 </div>
                 <Link to="/volumen/1" className="mt-3 inline-flex items-center text-blue-600 dark:text-blue-400 text-sm font-medium group">
-                  Explorar volumen 
+                  Explorar volumen
                   <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -274,7 +275,7 @@ function Home() {
                   <span className="text-xs bg-emerald-100 dark:bg-gray-800 text-emerald-700 dark:text-emerald-300 px-2 py-1 rounded-full">🎯 Competencias</span>
                 </div>
                 <Link to="/volumen/2" className="mt-3 inline-flex items-center text-emerald-600 dark:text-emerald-400 text-sm font-medium group">
-                  Explorar volumen 
+                  Explorar volumen
                   <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -301,7 +302,7 @@ function Home() {
                   <span className="text-xs bg-purple-100 dark:bg-gray-800 text-purple-700 dark:text-purple-300 px-2 py-1 rounded-full">🔄 Cambio</span>
                 </div>
                 <Link to="/volumen/3" className="mt-3 inline-flex items-center text-purple-600 dark:text-purple-400 text-sm font-medium group">
-                  Explorar volumen 
+                  Explorar volumen
                   <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
@@ -481,7 +482,7 @@ function VolumenPage() {
             </svg>
             Volver al inicio
           </Link>
-          
+
           <div className="flex items-center gap-4 mb-4">
             <div className="text-5xl sm:text-6xl">{color.icon}</div>
             <div>
@@ -527,7 +528,7 @@ function VolumenPage() {
                     </p>
                   </div>
                 </div>
-                <svg 
+                <svg
                   className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${expandedChapter === capitulo.id ? 'rotate-180' : ''}`}
                   fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 >
@@ -638,7 +639,7 @@ function LecturaPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <ReadingProgress />
-      
+
       {/* Header simplificado */}
       <header className="sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -648,7 +649,7 @@ function LecturaPage() {
             </svg>
             <span className="text-sm hidden sm:inline">Volver al volumen</span>
           </Link>
-          
+
           <div className="flex items-center gap-3">
             {/* Selector de fuente */}
             <div className="relative">
@@ -661,7 +662,7 @@ function LecturaPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </button>
-              
+
               {showOptions && (
                 <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-30">
                   <div className="p-2 space-y-1">
@@ -707,13 +708,16 @@ function LecturaPage() {
               {seccion.title}
             </h1>
           </div>
-          
+
           {/* Contenido */}
           <div className="text-gray-700 dark:text-gray-300">
             <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p class="text-center py-12 text-gray-400">Contenido próximamente...</p>' }} />
           </div>
         </article>
       </div>
+
+      <SuggestionForm sectionTitle={seccion.title} sectionSlug={seccion.slug} />
+
 
       <ThemeSelector />
     </div>
@@ -760,6 +764,12 @@ function AdminPage() {
     const { data } = await supabase.from('sections').select('*').order('order_index')
     setSections(data || [])
   }
+
+  {/* Panel de sugerencias */ }
+  <div className="mt-12">
+    <h2 className="text-2xl font-bold mb-6">💬 Sugerencias de lectores</h2>
+    <SuggestionList />
+  </div>
 
   const startEdit = (section) => {
     setEditing(section)
@@ -896,7 +906,7 @@ function AdminPage() {
 function App() {
   return (
     <BrowserRouter>
-    <ScrollToTop />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/volumen/:id" element={<VolumenPage />} />
