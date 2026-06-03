@@ -8,6 +8,7 @@ import SubscribeForm from './components/SubscribeForm'
 import ThemeSelector from './components/ThemeSelector'
 import ScrollToTop from './components/ScrollToTop'
 import SuggestionForm from './components/SuggestionForm'
+import ReadingProgress from './components/ReadingProgress'
 
 
 function Home() {
@@ -639,6 +640,7 @@ function LecturaPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <ReadingProgress />
+
 
       {/* Header simplificado */}
       <header className="sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
