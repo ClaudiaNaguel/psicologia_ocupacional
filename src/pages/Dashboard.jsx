@@ -93,7 +93,7 @@ export default function Dashboard() {
           </div>
         )}
       </div>
-      <DarkModeToggle />
+
       <ThemeSelector />
     </div>
   )

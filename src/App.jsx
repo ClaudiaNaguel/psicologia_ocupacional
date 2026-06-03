@@ -767,12 +767,6 @@ function AdminPage() {
     setSections(data || [])
   }
 
-  {/* Panel de sugerencias */ }
-  <div className="mt-12">
-    <h2 className="text-2xl font-bold mb-6">💬 Sugerencias de lectores</h2>
-    <SuggestionList />
-  </div>
-
   const startEdit = (section) => {
     setEditing(section)
     setEditTitle(section.title)
