@@ -206,26 +206,26 @@ function Home() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
           {/* Volumen 1 */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 fade-up">
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-3 py-2 text-white">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 sm:px-3 sm:py-2 text-white">
               <div className="flex justify-between items-center">
-                <span className="text-xl">📚</span>
-                <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Volumen I</span>
+                <span className="text-2xl sm:text-xl">📚</span>
+                <span className="text-xs sm:text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Volumen I</span>
               </div>
-              <h3 className="text-base font-bold mt-1">Fundamentos Teóricos</h3>
+              <h3 className="text-lg sm:text-base font-bold mt-1">Fundamentos Teóricos</h3>
             </div>
-            <div className="p-3">
-              <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed line-clamp-3">
+            <div className="p-4 sm:p-3">
+              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-xs leading-relaxed line-clamp-3">
                 Establece la base científica de la disciplina. Explora cómo el ser humano construye su realidad social y analiza la evolución histórica del trabajo, desde el higienismo del siglo XIX hasta la psicodinámica de Dejours.
               </p>
               <div className="mt-2 flex flex-wrap gap-1">
-                <span className="text-[10px] bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded-full">🧠 Subjetividad</span>
-                <span className="text-[10px] bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded-full">📜 Historia</span>
-                <span className="text-[10px] bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded-full">🔄 Dialéctica</span>
+                <span className="text-xs sm:text-[10px] bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded-full">🧠 Subjetividad</span>
+                <span className="text-xs sm:text-[10px] bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded-full">📜 Historia</span>
+                <span className="text-xs sm:text-[10px] bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded-full">🔄 Dialéctica</span>
               </div>
-              <Link to="/volumen/1" className="mt-2 inline-flex items-center text-blue-600 dark:text-blue-400 text-xs font-medium">
+              <Link to="/volumen/1" className="mt-2 inline-flex items-center text-blue-600 dark:text-blue-400 text-sm sm:text-xs font-medium">
                 Explorar volumen →
               </Link>
             </div>
@@ -233,23 +233,23 @@ function Home() {
 
           {/* Volumen 2 */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 fade-up" style={{ animationDelay: "0.1s" }}>
-            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 px-3 py-2 text-white">
+            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2 sm:px-3 sm:py-2 text-white">
               <div className="flex justify-between items-center">
-                <span className="text-xl">👥</span>
-                <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Volumen II</span>
+                <span className="text-2xl sm:text-xl">👥</span>
+                <span className="text-xs sm:text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Volumen II</span>
               </div>
-              <h3 className="text-base font-bold mt-1">Dinámicas de Grupo</h3>
+              <h3 className="text-lg sm:text-base font-bold mt-1">Dinámicas de Grupo</h3>
             </div>
-            <div className="p-3">
-              <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed line-clamp-3">
+            <div className="p-4 sm:p-3">
+              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-xs leading-relaxed line-clamp-3">
                 Analiza la trama colectiva (equipos, clima grupal, seguridad psicológica) y el rol del liderazgo. Aborda la psicometría, la descripción de puestos y la selección por competencias.
               </p>
               <div className="mt-2 flex flex-wrap gap-1">
-                <span className="text-[10px] bg-emerald-100 dark:bg-gray-700 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-full">🏆 Liderazgo</span>
-                <span className="text-[10px] bg-emerald-100 dark:bg-gray-700 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-full">📊 Psicometría</span>
-                <span className="text-[10px] bg-emerald-100 dark:bg-gray-700 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-full">🎯 Competencias</span>
+                <span className="text-xs sm:text-[10px] bg-emerald-100 dark:bg-gray-700 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-full">🏆 Liderazgo</span>
+                <span className="text-xs sm:text-[10px] bg-emerald-100 dark:bg-gray-700 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-full">📊 Psicometría</span>
+                <span className="text-xs sm:text-[10px] bg-emerald-100 dark:bg-gray-700 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-full">🎯 Competencias</span>
               </div>
-              <Link to="/volumen/2" className="mt-2 inline-flex items-center text-emerald-600 dark:text-emerald-400 text-xs font-medium">
+              <Link to="/volumen/2" className="mt-2 inline-flex items-center text-emerald-600 dark:text-emerald-400 text-sm sm:text-xs font-medium">
                 Explorar volumen →
               </Link>
             </div>
@@ -257,23 +257,23 @@ function Home() {
 
           {/* Volumen 3 */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 fade-up" style={{ animationDelay: "0.2s" }}>
-            <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-3 py-2 text-white">
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-2 sm:px-3 sm:py-2 text-white">
               <div className="flex justify-between items-center">
-                <span className="text-xl">🏥</span>
-                <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Volumen III</span>
+                <span className="text-2xl sm:text-xl">🏥</span>
+                <span className="text-xs sm:text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Volumen III</span>
               </div>
-              <h3 className="text-base font-bold mt-1">Salud Ocupacional</h3>
+              <h3 className="text-lg sm:text-base font-bold mt-1">Salud Ocupacional</h3>
             </div>
-            <div className="p-3">
-              <p className="text-gray-600 dark:text-gray-300 text-xs leading-relaxed line-clamp-3">
+            <div className="p-4 sm:p-3">
+              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-xs leading-relaxed line-clamp-3">
                 Desarrolla la Salud Mental Positiva Ocupacional, la gestión de riesgos (modelo Demanda-Control) y estrategias de intervención. Aborda clima, cultura y cambio organizacional.
               </p>
               <div className="mt-2 flex flex-wrap gap-1">
-                <span className="text-[10px] bg-purple-100 dark:bg-gray-700 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full">🧘 Salud mental</span>
-                <span className="text-[10px] bg-purple-100 dark:bg-gray-700 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full">⚠️ Riesgos</span>
-                <span className="text-[10px] bg-purple-100 dark:bg-gray-700 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full">🔄 Cambio</span>
+                <span className="text-xs sm:text-[10px] bg-purple-100 dark:bg-gray-700 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full">🧘 Salud mental</span>
+                <span className="text-xs sm:text-[10px] bg-purple-100 dark:bg-gray-700 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full">⚠️ Riesgos</span>
+                <span className="text-xs sm:text-[10px] bg-purple-100 dark:bg-gray-700 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full">🔄 Cambio</span>
               </div>
-              <Link to="/volumen/3" className="mt-2 inline-flex items-center text-purple-600 dark:text-purple-400 text-xs font-medium">
+              <Link to="/volumen/3" className="mt-2 inline-flex items-center text-purple-600 dark:text-purple-400 text-sm sm:text-xs font-medium">
                 Explorar volumen →
               </Link>
             </div>
