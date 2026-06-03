@@ -8,40 +8,61 @@ export default function SuggestionForm({ sectionTitle, sectionSlug }) {
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-    if (!suggestion.trim()) {
-      setMessage('Por favor, escribí tu sugerencia')
-      return
-    }
-
-    setStatus('loading')
-    setMessage('')
-
-    const { error } = await supabase
-      .from('suggestions')
-      .insert([{
-        name: name || null,
-        email: email || null,
-        suggestion: suggestion.trim(),
-        section_slug: sectionSlug,
-        page_url: window.location.href,
-        status: 'pending'
-      }])
-
-    if (error) {
-      setStatus('error')
-      setMessage('Error al enviar: ' + error.message)
-    } else {
-      setStatus('success')
-      setMessage('✅ ¡Gracias! Tu sugerencia fue enviada. La revisaré pronto.')
-      setName('')
-      setEmail('')
-      setSuggestion('')
-      setTimeout(() => setStatus('idle'), 5000)
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  
+  if (!suggestion.trim()) {
+    setMessage('Por favor, escribí tu sugerencia')
+    return
   }
+
+  setStatus('loading')
+  setMessage('')
+
+  // 1. Guardar en Supabase
+  const { error: dbError } = await supabase
+    .from('suggestions')
+    .insert([{
+      name: name || null,
+      email: email || null,
+      suggestion: suggestion.trim(),
+      section_slug: sectionSlug,
+      page_url: window.location.href,
+      status: 'pending'
+    }])
+
+  if (dbError) {
+    setStatus('error')
+    setMessage('Error al guardar: ' + dbError.message)
+    return
+  }
+
+  // 2. Llamar a la Edge Function para enviar email
+  try {
+    const { error: fnError } = await supabase.functions.invoke('send-suggestion-email', {
+      body: {
+        name,
+        email,
+        suggestion: suggestion.trim(),
+        sectionSlug,
+        pageUrl: window.location.href
+      }
+    })
+
+    if (fnError) {
+      console.error('Error en Edge Function:', fnError)
+    }
+  } catch (err) {
+    console.error('Error:', err)
+  }
+
+  setStatus('success')
+  setMessage('✅ ¡Gracias! Tu sugerencia fue enviada. La revisaré pronto.')
+  setName('')
+  setEmail('')
+  setSuggestion('')
+  setTimeout(() => setStatus('idle'), 5000)
+}
 
   return (
     <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
