@@ -632,3 +632,24 @@ body {
 .dark ::-webkit-scrollbar-thumb {
   background: #475569;
 }
+
+/* Efectos hover para botones */
+.hover\:bg-gray-750:hover {
+  background-color: #2d3748;
+}
+
+.dark .hover\:bg-gray-750:hover {
+  background-color: #2a2f3a;
+}
+
+/* Animación del acordeón */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
