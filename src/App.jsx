@@ -71,9 +71,9 @@ function Home() {
   // Estadísticas para mostrar credibilidad
   const stats = [
     { value: "3", label: "Volúmenes", icon: "📚" },
-    { value: "12", label: "Capítulos", icon: "📖" },
-    { value: "50+", label: "Secciones", icon: "📑" },
-    { value: "500+", label: "Páginas", icon: "📄" }
+    { value: "6", label: "Capítulos", icon: "📖" },
+    { value: "60+", label: "Secciones", icon: "📑" },
+    { value: "1000+", label: "Páginas", icon: "📄" }
   ]
 
   return (
