@@ -450,39 +450,144 @@ function VolumenPage() {
   )
 }
 
-// Página de lectura
+// Página de lectura - VERSIÓN MEJORADA
 function LecturaPage() {
   const { slug } = useParams()
   const [seccion, setSeccion] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [fontSize, setFontSize] = useState('medium')
+  const [showOptions, setShowOptions] = useState(false)
 
   useEffect(() => {
     cargarSeccion()
+    window.scrollTo(0, 0)
   }, [slug])
 
   const cargarSeccion = async () => {
+    setLoading(true)
     const { data } = await supabase
       .from('sections')
       .select('*')
       .eq('slug', slug)
       .single()
     setSeccion(data)
+    setLoading(false)
   }
 
-  if (!seccion) return <div className="p-8 text-center">Cargando...</div>
+  const fontSizes = {
+    small: 'text-base',
+    medium: 'text-lg',
+    large: 'text-xl'
+  }
+
+  const lineHeights = {
+    small: 'leading-relaxed',
+    medium: 'leading-relaxed',
+    large: 'leading-loose'
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-500 dark:text-gray-400">Cargando contenido...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!seccion) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <p className="text-gray-500 dark:text-gray-400 text-xl mb-4">Contenido no encontrado</p>
+          <Link to="/" className="text-blue-600 hover:underline">Volver al inicio</Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <Link to="/volumen/1" className="text-blue-600">← Volver</Link>
-      <h1 className="text-3xl font-bold mt-4 mb-6">{seccion.title}</h1>
-      <div className="bg-white p-8 rounded-lg shadow prose max-w-none">
-        <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p>Contenido próximamente...</p>' }} />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <ReadingProgress />
+      
+      {/* Header simplificado */}
+      <header className="sticky top-0 z-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+          <Link to="/volumen/1" className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span className="text-sm hidden sm:inline">Volver al volumen</span>
+          </Link>
+          
+          <div className="flex items-center gap-3">
+            {/* Selector de fuente */}
+            <div className="relative">
+              <button
+                onClick={() => setShowOptions(!showOptions)}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                aria-label="Opciones de lectura"
+              >
+                <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </button>
+              
+              {showOptions && (
+                <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-30">
+                  <div className="p-2 space-y-1">
+                    <button
+                      onClick={() => { setFontSize('small'); setShowOptions(false) }}
+                      className={`w-full text-left px-3 py-1.5 text-sm rounded-md transition ${fontSize === 'small' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                    >
+                      🔤 Pequeño
+                    </button>
+                    <button
+                      onClick={() => { setFontSize('medium'); setShowOptions(false) }}
+                      className={`w-full text-left px-3 py-1.5 text-base rounded-md transition ${fontSize === 'medium' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                    >
+                      🔤 Mediano
+                    </button>
+                    <button
+                      onClick={() => { setFontSize('large'); setShowOptions(false) }}
+                      className={`w-full text-left px-3 py-1.5 text-lg rounded-md transition ${fontSize === 'large' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                    >
+                      🔤 Grande
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Contenido principal */}
+      <div className="max-w-4xl mx-auto px-4 py-8 lg:py-12">
+        <article className={`${fontSizes[fontSize]} ${lineHeights[fontSize]} prose dark:prose-invert max-w-none`}>
+          {/* Título con decoración */}
+          <div className="mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 mb-3">
+              <span className="bg-blue-100 dark:bg-blue-900/50 px-2 py-0.5 rounded-full text-xs">
+                {seccion.tier === 'free' ? '📖 Gratis' : '⭐ Premium'}
+              </span>
+              <span>•</span>
+              <span>Lectura</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight">
+              {seccion.title}
+            </h1>
+          </div>
+          
+          {/* Contenido */}
+          <div className="text-gray-700 dark:text-gray-300">
+            <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p class="text-center py-12 text-gray-400">Contenido próximamente...</p>' }} />
+          </div>
+        </article>
       </div>
 
-      {seccion.tier === 'premium' && (
-        <div className="mt-4 text-center text-xs text-gray-400">
-          ⭐ Este artículo es premium (el bloqueo está desactivado temporalmente para feedback)
-        </div>
-      )}
       <ThemeSelector />
     </div>
   )

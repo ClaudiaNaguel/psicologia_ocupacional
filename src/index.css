@@ -537,3 +537,98 @@ body {
 .dark .shadow-xl {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
 }
+
+/* Mejoras para la página de lectura */
+.prose {
+  max-width: none;
+}
+
+.prose h2 {
+  font-size: 1.8rem !important;
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+  padding-bottom: 0.5rem !important;
+  border-bottom: 2px solid #e5e7eb;
+  color: #1f2937;
+}
+
+.dark .prose h2 {
+  border-bottom-color: #374151;
+  color: #f9fafb;
+}
+
+.prose h3 {
+  font-size: 1.4rem !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.75rem !important;
+  color: #374151;
+}
+
+.dark .prose h3 {
+  color: #e5e7eb;
+}
+
+.prose p {
+  margin-bottom: 1.25rem !important;
+  line-height: 1.75 !important;
+}
+
+.prose ul, .prose ol {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  padding-left: 1.5rem !important;
+}
+
+.prose li {
+  margin-bottom: 0.5rem !important;
+}
+
+.prose blockquote {
+  border-left: 4px solid #3b82f6;
+  background-color: #f3f4f6;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.dark .prose blockquote {
+  background-color: #1f2937;
+  border-left-color: #60a5fa;
+}
+
+/* Animación de carga */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
