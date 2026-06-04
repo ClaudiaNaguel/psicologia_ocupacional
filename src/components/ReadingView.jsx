@@ -39,7 +39,7 @@ const ReadingView = () => {
 
   const loadSection = async () => {
     setLoading(true);
-    
+
     try {
       const { data: sectionData, error: sectionError } = await supabase
         .from('sections')
@@ -49,13 +49,13 @@ const ReadingView = () => {
         `)
         .eq('id', sectionId)
         .single();
-      
+
       if (sectionError) throw sectionError;
-      
+
       if (sectionData) {
         setSection(sectionData);
         setChapter(sectionData.chapter);
-        
+
         if (sectionData.chapter?.volume_id) {
           const { data: volumeData } = await supabase
             .from('volumes')
@@ -64,13 +64,13 @@ const ReadingView = () => {
             .single();
           setVolume(volumeData);
         }
-        
+
         const { data: sectionsData, error: sectionsError } = await supabase
           .from('sections')
           .select('*')
           .eq('chapter_id', sectionData.chapter_id)
           .order('order_index', { ascending: true });
-          
+
         if (!sectionsError && sectionsData) {
           setAllSections(sectionsData);
           const currentIndex = sectionsData.findIndex(s => s.id === parseInt(sectionId));
@@ -105,7 +105,7 @@ const ReadingView = () => {
       <div className="text-gray-500">Cargando contenido...</div>
     </div>
   );
-  
+
   if (!section) return (
     <div className="text-center py-12">
       <h2 className="text-2xl font-bold text-gray-700">Sección no encontrada</h2>
@@ -122,18 +122,17 @@ const ReadingView = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar izquierdo - Índice con jerarquía visual */}
-      <aside 
-        className={`${
-          sidebarOpen ? 'w-80' : 'w-12'
-        } transition-all duration-300 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 relative`}
+      <aside
+        className={`${sidebarOpen ? 'w-80' : 'w-12'
+          } transition-all duration-300 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 relative`}
       >
-        <button 
+        <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="absolute -right-3 top-20 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full p-1 shadow-md z-10 hover:bg-gray-50 dark:hover:bg-gray-700"
         >
           {sidebarOpen ? '◀' : '▶'}
         </button>
-        
+
         {sidebarOpen && (
           <div className="p-4 h-full overflow-y-auto">
             <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
@@ -146,7 +145,7 @@ const ReadingView = () => {
                 </p>
               )}
             </div>
-            
+
             <nav className="space-y-1">
               {allSections.map((s) => {
                 const isActive = s.id === parseInt(sectionId);
@@ -154,22 +153,20 @@ const ReadingView = () => {
                 const indent = (level - 1) * 16;
                 const sectionNum = getSectionNumberFromTitle(s.title);
                 const cleanTitle = getCleanTitle(s.title);
-                
+
                 return (
                   <Link
                     key={s.id}
                     to={`/leer/${s.id}`}
-                    className={`block p-2 rounded-lg text-sm transition-colors ${
-                      isActive 
-                        ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium' 
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
+                    className={`block p-2 rounded-lg text-sm transition-colors ${isActive
+                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      }`}
                     style={{ marginLeft: indent }}
                   >
                     <div className="flex items-start gap-2">
-                      <span className={`font-mono text-xs shrink-0 ${
-                        level === 1 ? 'font-bold text-gray-700 dark:text-gray-300' : 'text-gray-400'
-                      }`}>
+                      <span className={`font-mono text-xs shrink-0 ${level === 1 ? 'font-bold text-gray-700 dark:text-gray-300' : 'text-gray-400'
+                        }`}>
                         {sectionNum}
                       </span>
                       <span className="flex-1">
@@ -191,41 +188,19 @@ const ReadingView = () => {
 
       {/* Contenido principal */}
       <main className="flex-1 min-w-0">
-        <div className="fixed top-16 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 z-10">
-          <div 
-            className="h-full bg-blue-600 transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
+        {/* Barra de progreso - Ahora dentro del flujo normal */}
+        <div className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900 pt-1">
+          <div className="h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-600 transition-all duration-300 rounded-full"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-8">
           {/* Navegación superior */}
-          <div className="flex justify-between items-center mb-8 text-sm">
-            <Link 
-              to={`/volumen/${volume?.id}`} 
-              className="text-gray-500 hover:text-blue-600 flex items-center gap-1"
-            >
-              ← Volver al volumen
-            </Link>
-            <div className="flex gap-4">
-              {prevSection && (
-                <Link 
-                  to={`/leer/${prevSection.id}`} 
-                  className="flex items-center gap-1 text-gray-500 hover:text-blue-600"
-                >
-                  <ChevronLeft size={16} /> Anterior
-                </Link>
-              )}
-              {nextSection && (
-                <Link 
-                  to={`/leer/${nextSection.id}`} 
-                  className="flex items-center gap-1 text-gray-500 hover:text-blue-600"
-                >
-                  Siguiente <ChevronRight size={16} />
-                </Link>
-              )}
-            </div>
-          </div>
+
 
           {/* Jerarquía del contenido - MEJORADA */}
           <div className="mb-8">
@@ -273,15 +248,14 @@ const ReadingView = () => {
                   <span>• Sub-subsección</span>
                 </div>
               )}
-              
-              <h2 className={`font-semibold text-gray-800 dark:text-gray-200 ${
-                sectionLevel === 1 ? 'text-2xl md:text-3xl' :
+
+              <h2 className={`font-semibold text-gray-800 dark:text-gray-200 ${sectionLevel === 1 ? 'text-2xl md:text-3xl' :
                 sectionLevel === 2 ? 'text-xl md:text-2xl' :
-                'text-lg md:text-xl'
-              }`}>
+                  'text-lg md:text-xl'
+                }`}>
                 {getCleanTitle(section.title)}
               </h2>
-              
+
               {section.tier === 'premium' && (
                 <div className="mt-3 inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
                   <Lock size={12} />
@@ -294,7 +268,7 @@ const ReadingView = () => {
           {/* Contenido HTML */}
           <div className="prose prose-lg dark:prose-invert max-w-none">
             {section.content ? (
-              <div 
+              <div
                 dangerouslySetInnerHTML={{ __html: section.content }}
                 className="space-y-4 [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:border-l-4 [&_h2]:border-blue-500 [&_h2]:pl-3 [&_h3]:text-xl [&_h3]:font-medium [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-4 [&_p]:leading-relaxed"
               />
@@ -307,35 +281,35 @@ const ReadingView = () => {
             )}
           </div>
 
-          {/* Navegación inferior */}
-          <div className="flex justify-between mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+          {/* Navegación inferior - Versión con texto multilínea */}
+          <div className="flex justify-between mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 gap-4">
             {prevSection ? (
-              <Link 
-                to={`/leer/${prevSection.id}`} 
-                className="group flex-1 flex items-center gap-3 text-blue-600 hover:text-blue-700"
+              <Link
+                to={`/leer/${prevSection.id}`}
+                className="group flex-1 flex items-start gap-3 text-blue-600 hover:text-blue-700"
               >
-                <ChevronLeft size={20} />
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide">Anterior</div>
-                  <div className="font-medium group-hover:underline truncate">
+                <ChevronLeft size={20} className="mt-1 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Anterior</div>
+                  <div className="font-medium group-hover:underline break-words leading-tight">
                     {getCleanTitle(prevSection.title)}
                   </div>
                 </div>
               </Link>
             ) : <div className="flex-1" />}
-            
+
             {nextSection ? (
-              <Link 
-                to={`/leer/${nextSection.id}`} 
-                className="group flex-1 flex items-center justify-end gap-3 text-blue-600 hover:text-blue-700 text-right"
+              <Link
+                to={`/leer/${nextSection.id}`}
+                className="group flex-1 flex items-start justify-end gap-3 text-blue-600 hover:text-blue-700 text-right"
               >
-                <div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide">Siguiente</div>
-                  <div className="font-medium group-hover:underline truncate">
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Siguiente</div>
+                  <div className="font-medium group-hover:underline break-words leading-tight">
                     {getCleanTitle(nextSection.title)}
                   </div>
                 </div>
-                <ChevronRight size={20} />
+                <ChevronRight size={20} className="mt-1 shrink-0" />
               </Link>
             ) : <div className="flex-1" />}
           </div>
@@ -346,16 +320,16 @@ const ReadingView = () => {
       <aside className="w-72 hidden xl:block p-6 border-l border-gray-200 dark:border-gray-700">
         <div className="sticky top-20">
           <h4 className="font-semibold mb-4 text-gray-900 dark:text-white">Tu progreso</h4>
-          
+
           <div className="mb-6">
             <div className="flex justify-between text-sm text-gray-500 mb-2">
               <span>{chapter?.title}</span>
               <span>{Math.round(progress)}%</span>
             </div>
             <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-blue-600 rounded-full transition-all duration-300" 
-                style={{ width: `${progress}%` }} 
+              <div
+                className="h-full bg-blue-600 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
               />
             </div>
             <div className="text-xs text-gray-400 mt-2">

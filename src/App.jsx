@@ -180,7 +180,7 @@ function Home() {
                     {searchResults.map(result => (
                       <Link
                         key={result.id}
-                        to={`/lectura/${result.slug}`}
+                        to={`/leer/${result.id}`}
                         onClick={() => setShowSearch(false)}
                         className="block px-4 py-3 hover:bg-gray-50 border-b last:border-b-0 transition"
                       >
@@ -548,7 +548,7 @@ function VolumenPage() {
                       {capitulo.secciones.map((seccion, secIdx) => (
                         <Link
                           key={seccion.id}
-                          to={`/lectura/${seccion.slug}`}
+                          to={`/leer/${seccion.id}`}
                           className="flex items-center gap-3 px-5 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition group"
                         >
                           <span className="w-6 text-xs text-gray-400">{String(secIdx + 1).padStart(2, '0')}</span>
