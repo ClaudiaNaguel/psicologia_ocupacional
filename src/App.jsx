@@ -9,6 +9,10 @@ import ThemeSelector from './components/ThemeSelector'
 import ScrollToTop from './components/ScrollToTop'
 import SuggestionForm from './components/SuggestionForm'
 import ReadingProgress from './components/ReadingProgress'
+import ReadingView from './components/ReadingView';
+import ChapterView from './components/ChapterView';
+
+
 
 
 function Home() {
@@ -911,6 +915,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/leer/:sectionId" element={<ReadingView />} />
+        <Route path="/capitulo/:chapterId" element={<ChapterView />} />
       </Routes>
     </BrowserRouter>
   )
