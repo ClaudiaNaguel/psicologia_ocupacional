@@ -8,3 +8,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+// Silenciar error de Realtime (// no afecta la funcionalidad)
+const originalConsoleError = console.error;
+console.error = (...args) => {
+  if (args[0]?.includes?.('A listener indicated an asynchronous response')) {
+    return;
+  }
+  originalConsoleError(...args);
+
+};
