@@ -104,9 +104,9 @@ function Home() {
               <span className="text-blue-200 text-sm">3 volúmenes</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight bg-gradient-to-r from-white to-blue-200 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-              La Arquitectura del Trabajo
-            </h1>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-gray-400 dark:text-white-50">
+  La Arquitectura del Trabajo
+</h1>
 
             <p className="text-lg sm:text-xl md:text-2xl mb-6 text-blue-100 max-w-3xl mx-auto">
               Psicología, Subjetividad y Dinámicas Organizacionales
