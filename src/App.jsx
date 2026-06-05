@@ -549,11 +549,10 @@ function VolumenPage() {
                         <Link
                           key={seccion.id}
                           to={`/leer/${seccion.id}`}
-                          className="flex items-center gap-3 px-5 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition group"
+                          className="flex items-center gap-3 px-5 py-3 hover:bg-gray-200 dark:hover:bg-gray-700 transition group"
                         >
                           <span className="w-6 text-xs text-gray-400">{String(secIdx + 1).padStart(2, '0')}</span>
-                          <span className="flex-1 text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
-                            {seccion.title}
+                          <span className="flex-1 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">                            {seccion.title}
                           </span>
                           {seccion.tier === 'premium' && (
                             <span className="text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-2 py-0.5 rounded-full">
