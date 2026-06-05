@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
-import RichTextEditor from '../components/RichTextEditor';
+import WysiwygEditor from '../components/WysiwygEditor';
 import ThemeSelector from '../components/ThemeSelector';
 
 function AdminPage() {
@@ -52,7 +52,7 @@ function AdminPage() {
         .from('sections')
         .select('*')
         .order('order_index', { ascending: true });
-      
+
       if (error) throw error;
       setSections(data || []);
     } catch (error) {
@@ -70,36 +70,36 @@ function AdminPage() {
 
   const saveSection = async () => {
     if (!editing) return;
-    
+
     setSaving(true);
     setSaveMessage(null);
-    
+
     try {
       console.log('Guardando sección:', editing.id);
       console.log('Título:', editTitle);
       console.log('Contenido length:', editContent?.length);
-      
+
       const { error } = await supabase
         .from('sections')
-        .update({ 
-          title: editTitle, 
-          content: editContent 
+        .update({
+          title: editTitle,
+          content: editContent
         })
         .eq('id', editing.id);
 
       if (error) throw error;
-      
+
       // Recargar la lista de secciones
       await cargarSecciones();
-      
+
       setSaveMessage({ type: 'success', text: '✅ Guardado correctamente' });
-      
+
       // Opcional: salir del modo edición después de 1 segundo
       setTimeout(() => {
         setEditing(null);
         setSaveMessage(null);
       }, 1000);
-      
+
     } catch (error) {
       console.error('Error guardando:', error);
       setSaveMessage({ type: 'error', text: '❌ Error: ' + error.message });
@@ -151,22 +151,21 @@ function AdminPage() {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-8">
         <div className="max-w-6xl mx-auto">
-          <button 
-            onClick={() => setEditing(null)} 
+          <button
+            onClick={() => setEditing(null)}
             className="text-blue-600 dark:text-blue-400 mb-4 hover:underline flex items-center gap-1"
           >
             ← Volver al listado
           </button>
-          
+
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <h1 className="text-2xl font-bold mb-4 dark:text-white">Editando: {editing.title}</h1>
 
             {saveMessage && (
-              <div className={`mb-4 p-3 rounded-lg ${
-                saveMessage.type === 'success' 
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
+              <div className={`mb-4 p-3 rounded-lg ${saveMessage.type === 'success'
+                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                   : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-              }`}>
+                }`}>
                 {saveMessage.text}
               </div>
             )}
@@ -183,22 +182,19 @@ function AdminPage() {
 
             <div className="mb-4">
               <label className="block font-semibold mb-2 dark:text-gray-300">Contenido</label>
-              <RichTextEditor
+              <WysiwygEditor
                 value={editContent}
                 onChange={setEditContent}
-                placeholder="Escribe o pega el contenido aquí..."
+                placeholder="Escribe aquí... (como en Google Docs)"
               />
-              <p className="text-xs text-gray-500 mt-2">
-                Puedes usar formato Markdown: **negrita**, *cursiva*, # títulos, - listas, > citas, etc.
-              </p>
+
             </div>
 
             <button
               onClick={saveSection}
               disabled={saving}
-              className={`bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition ${
-                saving ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition ${saving ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
             >
               {saving ? '💾 Guardando...' : '💾 Guardar cambios'}
             </button>
