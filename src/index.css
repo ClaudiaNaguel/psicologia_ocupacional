@@ -829,3 +829,45 @@ body {
 .dark .wysiwyg-content .ProseMirror p.is-editor-empty:first-child::before {
   color: #6b7280;
 }
+
+/* Estilos para tablas en modo oscuro */
+.dark table,
+.dark .table-container table,
+.dark div[style*="overflow-x"] table {
+  background-color: #1f2937;
+  color: #f3f4f6;
+}
+
+.dark th,
+.dark .table-container th,
+.dark div[style*="overflow-x"] th {
+  background-color: #374151 !important;
+  color: #f3f4f6 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark td,
+.dark .table-container td,
+.dark div[style*="overflow-x"] td {
+  background-color: #1f2937 !important;
+  color: #f3f4f6 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark tr {
+  background-color: #1f2937 !important;
+}
+
+.dark tr:nth-child(even),
+.dark .table-container tr:nth-child(even),
+.dark div[style*="overflow-x"] tr:nth-child(even) {
+  background-color: #2d3748 !important;
+}
+
+/* Forzar colores para tablas con estilos inline */
+.dark table td,
+.dark table th,
+.dark .table-container td,
+.dark .table-container th {
+  color: #f3f4f6 !important;
+}
