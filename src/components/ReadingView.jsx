@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { ChevronLeft, ChevronRight, BookOpen, Lock } from 'lucide-react';
+import SafeHTML from './SafeHTML';
 
 const ReadingView = () => {
   const { sectionId } = useParams();
@@ -123,34 +124,33 @@ const ReadingView = () => {
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Sidebar izquierdo */}
-<aside 
-  className={`${
-    sidebarOpen ? 'w-80' : 'w-0'
-  } transition-all duration-300 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 relative overflow-hidden`}
->
-  {sidebarOpen && (
-    <div className="p-4 h-full overflow-y-auto">
-      {/* Botón para cerrar DENTRO del sidebar */}
-      <button
-        onClick={() => setSidebarOpen(false)}
-        className="absolute right-2 top-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        aria-label="Cerrar índice"
+      <aside
+        className={`${sidebarOpen ? 'w-80' : 'w-0'
+          } transition-all duration-300 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 relative overflow-hidden`}
       >
-        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+        {sidebarOpen && (
+          <div className="p-4 h-full overflow-y-auto">
+            {/* Botón para cerrar DENTRO del sidebar */}
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="absolute right-2 top-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+              aria-label="Cerrar índice"
+            >
+              <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
 
-      <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="font-bold text-lg text-gray-900 dark:text-white">
-          {chapter?.title}
-        </h3>
-        {volume && (
-          <p className="text-sm text-gray-500 mt-1">
-            Volumen {volume.volume_number}: {volume.title}
-          </p>
-        )}
-      </div>
+            <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+                {chapter?.title}
+              </h3>
+              {volume && (
+                <p className="text-sm text-gray-500 mt-1">
+                  Volumen {volume.volume_number}: {volume.title}
+                </p>
+              )}
+            </div>
 
             <nav className="space-y-1">
               {allSections.map((s) => {
@@ -190,17 +190,17 @@ const ReadingView = () => {
       </aside>
 
       {/* Botón flotante para ABRIR el menú (solo visible cuando sidebar está CERRADO) */}
-{!sidebarOpen && (
-  <button
-    onClick={() => setSidebarOpen(true)}
-    className="fixed left-4 top-20 z-50 p-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition"
-    aria-label="Abrir índice"
-  >
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  </button>
-)}
+      {!sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="fixed left-4 top-20 z-50 p-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition"
+          aria-label="Abrir índice"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      )}
 
       {/* Contenido principal */}
       <main className="flex-1 min-w-0">
@@ -284,8 +284,8 @@ const ReadingView = () => {
           {/* Contenido HTML */}
           <div className="prose prose-lg dark:prose-invert max-w-none">
             {section.content ? (
-              <div
-                dangerouslySetInnerHTML={{ __html: section.content }}
+              <SafeHTML
+                html={section.content}
                 className="space-y-4 [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:border-l-4 [&_h2]:border-blue-500 [&_h2]:pl-3 [&_h3]:text-xl [&_h3]:font-medium [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-4 [&_p]:leading-relaxed"
               />
             ) : (
