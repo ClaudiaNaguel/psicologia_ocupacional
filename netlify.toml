@@ -14,7 +14,7 @@
       style-src 'self' 'unsafe-inline';
       img-src 'self' data: https:;
       font-src 'self';
-      connect-src 'self' https://lwhdrokejxetisdtdmkv.supabase.co wss://lwhdrokejxetisdtdmkv.supabase.co;
+      connect-src 'self' https: wss:;
       frame-src 'none';
       object-src 'none';
     """
