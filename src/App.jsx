@@ -104,7 +104,7 @@ function Home() {
               <span className="text-blue-200 text-sm">3 volúmenes</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-gray-400 dark:text-white-50">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white-50 dark:text-white-50">
   La Arquitectura del Trabajo
 </h1>
 
