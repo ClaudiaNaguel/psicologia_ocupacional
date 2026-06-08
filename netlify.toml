@@ -2,17 +2,30 @@
   command = "npm run build"
   publish = "dist"
 
-[build.environment]
-  NODE_VERSION = "18"
-  # Ignorar las claves públicas en el escaneo de secretos
-  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_ANON_KEY,VITE_SUPABASE_URL"
+# ============================================
+# CABECERAS DE SEGURIDAD PARA TODAS LAS RUTAS
+# ============================================
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' https://lwhdrokejxetisdtdmkv.supabase.co;
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: https:;
+      font-src 'self';
+      connect-src 'self' https://lwhdrokejxetisdtdmkv.supabase.co wss://lwhdrokejxetisdtdmkv.supabase.co;
+      frame-src 'none';
+      object-src 'none';
+    """
 
+# ============================================
+# REDIRECCIONES (SPA)
+# ============================================
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
