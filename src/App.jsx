@@ -11,6 +11,8 @@ import SuggestionForm from './components/SuggestionForm'
 import ReadingProgress from './components/ReadingProgress'
 import ReadingView from './components/ReadingView';
 import ChapterView from './components/ChapterView';
+import SafeHTML from './components/SafeHTML';
+
 
 
 
@@ -105,8 +107,8 @@ function Home() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white-50 dark:text-white-50">
-  La Arquitectura del Trabajo
-</h1>
+              La Arquitectura del Trabajo
+            </h1>
 
             <p className="text-lg sm:text-xl md:text-2xl mb-6 text-blue-100 max-w-3xl mx-auto">
               Psicología, Subjetividad y Dinámicas Organizacionales
@@ -716,7 +718,7 @@ function LecturaPage() {
 
           {/* Contenido */}
           <div className="text-gray-700 dark:text-gray-300">
-            <div dangerouslySetInnerHTML={{ __html: seccion.content || '<p class="text-center py-12 text-gray-400">Contenido próximamente...</p>' }} />
+            <SafeHTML html={seccion.content} />
           </div>
         </article>
       </div>
