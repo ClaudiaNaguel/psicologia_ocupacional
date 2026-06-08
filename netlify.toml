@@ -19,7 +19,6 @@
       object-src 'none';
     """
 
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
