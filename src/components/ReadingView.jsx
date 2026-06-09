@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { ChevronLeft, ChevronRight, BookOpen, Lock } from 'lucide-react';
 import SafeHTML from './SafeHTML';
+import SuggestionForm from './SuggestionForm';
+
 
 const ReadingView = () => {
   const { sectionId } = useParams();
@@ -297,6 +299,12 @@ const ReadingView = () => {
             )}
           </div>
 
+          {/* 🔥 AGREGAR FORMULARIO DE SUGERENCIAS AQUÍ 🔥 */}
+          <SuggestionForm
+            sectionId={section.id}
+            sectionTitle={section.title}
+          />
+
           {/* Navegación inferior - Versión con texto multilínea */}
           <div className="flex justify-between mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 gap-4">
             {prevSection ? (
@@ -331,6 +339,8 @@ const ReadingView = () => {
           </div>
         </div>
       </main>
+
+
 
       {/* Sidebar derecho */}
       <aside className="w-72 hidden xl:block p-6 border-l border-gray-200 dark:border-gray-700">
