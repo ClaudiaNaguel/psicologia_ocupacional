@@ -1005,3 +1005,38 @@ body {
   background-color: #1f2937 !important;
 }
 
+/* Forzar colores de texto en modo oscuro para elementos con fondo claro */
+.dark [style*="background-color: #f8fafc"],
+.dark [style*="background-color:#f8fafc"] {
+  color: #1e293b !important;
+}
+
+.dark [style*="background-color: #e2e8f0"],
+.dark [style*="background-color:#e2e8f0"] {
+  color: #0f172a !important;
+}
+
+/* Asegurar que las tablas sean legibles en modo oscuro */
+.dark table,
+.dark table td,
+.dark table th,
+.dark table tr {
+  color: #1e293b;
+}
+
+.dark table {
+  background-color: #ffffff;
+}
+
+/* Mantener los concept-card con fondo oscuro */
+.dark .concept-card {
+  background-color: #1e293b;
+  color: #e2e8f0;
+}
+
+.dark .concept-card h4,
+.dark .concept-card h3,
+.dark .concept-card strong {
+  color: #ffffff;
+}
+
