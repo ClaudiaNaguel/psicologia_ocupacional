@@ -463,81 +463,6 @@ body {
   color: #94a3b8 !important;
 }
 
-/* ============================================
-   MEJORAS PARA MODO OSCURO - RECORRIDO POR EL LIBRO
-   ============================================ */
-
-/* Fondo de tarjetas */
-.dark .bg-white.rounded-2xl {
-  background-color: #1e293b !important;
-  border: 1px solid #334155;
-}
-
-/* Gradientes de los headers de cada volumen */
-.dark .bg-gradient-to-r.from-blue-500.to-blue-600 {
-  background: linear-gradient(to right, #1e3a5f, #1e40af) !important;
-}
-
-.dark .bg-gradient-to-r.from-emerald-500.to-emerald-600 {
-  background: linear-gradient(to right, #064e3b, #047857) !important;
-}
-
-.dark .bg-gradient-to-r.from-purple-500.to-purple-600 {
-  background: linear-gradient(to right, #4c1d95, #6d28d9) !important;
-}
-
-/* Texto dentro de tarjetas */
-.dark .text-gray-800,
-.dark .text-gray-700 {
-  color: #f1f5f9 !important;
-}
-
-.dark .text-gray-600,
-.dark .text-gray-500 {
-  color: #cbd5e1 !important;
-}
-
-/* Badges (etiquetas) */
-.dark .bg-blue-100,
-.dark .bg-emerald-100,
-.dark .bg-purple-100 {
-  background-color: #334155 !important;
-}
-
-.dark .text-blue-700 {
-  color: #93c5fd !important;
-}
-
-.dark .text-emerald-700 {
-  color: #6ee7b7 !important;
-}
-
-.dark .text-purple-700 {
-  color: #c4b5fd !important;
-}
-
-/* Botones "Explorar volumen" */
-.dark .text-blue-600 {
-  color: #60a5fa !important;
-}
-
-.dark .text-emerald-600 {
-  color: #34d399 !important;
-}
-
-.dark .text-purple-600 {
-  color: #a78bfa !important;
-}
-
-/* Sombras para modo oscuro */
-.dark .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-}
-
-.dark .shadow-xl {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-}
-
 /* Mejoras para la página de lectura */
 .prose {
   max-width: none;
@@ -734,102 +659,6 @@ body {
   height: 0;
 }
 
-/* Estilos para el editor WYSIWYG con modo oscuro */
-.wysiwyg-content .ProseMirror {
-  min-height: 400px;
-  padding: 1rem;
-  outline: none;
-  background-color: transparent;
-  color: inherit;
-}
-
-.wysiwyg-content .ProseMirror p {
-  margin-bottom: 1rem;
-  line-height: 1.6;
-}
-
-.wysiwyg-content .ProseMirror h1 {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.wysiwyg-content .ProseMirror h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 1.25rem;
-  margin-bottom: 0.75rem;
-}
-
-.wysiwyg-content .ProseMirror h3 {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.wysiwyg-content .ProseMirror ul,
-.wysiwyg-content .ProseMirror ol {
-  margin-left: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.wysiwyg-content .ProseMirror li {
-  margin-bottom: 0.25rem;
-}
-
-.wysiwyg-content .ProseMirror blockquote {
-  border-left: 4px solid #3b82f6;
-  padding-left: 1rem;
-  margin: 1rem 0;
-  font-style: italic;
-  color: #4b5563;
-}
-
-/* Modo oscuro para blockquote */
-.dark .wysiwyg-content .ProseMirror blockquote {
-  color: #9ca3af;
-}
-
-.wysiwyg-content .ProseMirror code {
-  background-color: #f3f4f6;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  font-family: monospace;
-}
-
-.dark .wysiwyg-content .ProseMirror code {
-  background-color: #374151;
-}
-
-.wysiwyg-content .ProseMirror pre {
-  background-color: #1f2937;
-  color: #f3f4f6;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-}
-
-.wysiwyg-content .ProseMirror pre code {
-  background: none;
-  color: inherit;
-  padding: 0;
-}
-
-/* Placeholder */
-.wysiwyg-content .ProseMirror p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  color: #9ca3af;
-  pointer-events: none;
-  height: 0;
-}
-
-.dark .wysiwyg-content .ProseMirror p.is-editor-empty:first-child::before {
-  color: #6b7280;
-}
-
 /* Estilos para tablas en modo oscuro */
 .dark table,
 .dark .table-container table,
@@ -971,40 +800,6 @@ body {
   color: #f3f4f6;
 }
 
-/* Forzar colores de texto en modo oscuro */
-.dark .text-gray-700 {
-  color: #e5e7eb !important;
-}
-
-.dark .text-gray-600 {
-  color: #d1d5db !important;
-}
-
-.dark .text-gray-500 {
-  color: #9ca3af !important;
-}
-
-.dark .text-gray-800 {
-  color: #f3f4f6 !important;
-}
-
-.dark .text-gray-900 {
-  color: #ffffff !important;
-}
-
-/* Forzar fondos en modo oscuro */
-.dark .bg-white {
-  background-color: #1f2937 !important;
-}
-
-.dark .bg-gray-50 {
-  background-color: #111827 !important;
-}
-
-.dark .bg-gray-100 {
-  background-color: #1f2937 !important;
-}
-
 /* Forzar colores de texto en modo oscuro para elementos con fondo claro */
 .dark [style*="background-color: #f8fafc"],
 .dark [style*="background-color:#f8fafc"] {
@@ -1014,18 +809,6 @@ body {
 .dark [style*="background-color: #e2e8f0"],
 .dark [style*="background-color:#e2e8f0"] {
   color: #0f172a !important;
-}
-
-/* Asegurar que las tablas sean legibles en modo oscuro */
-.dark table,
-.dark table td,
-.dark table th,
-.dark table tr {
-  color: #1e293b;
-}
-
-.dark table {
-  background-color: #ffffff;
 }
 
 /* Mantener los concept-card con fondo oscuro */

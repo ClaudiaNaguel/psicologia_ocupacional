@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../hooks/useAuth'
-import DarkModeToggle from '../components/DarkModeToggle'
 import ThemeSelector from '../components/ThemeSelector'
 
 

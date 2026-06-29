@@ -13,7 +13,7 @@ export default function TableOfContents({ currentSlug }) {
   const cargarSecciones = async () => {
     const { data } = await supabase
       .from('sections')
-      .select('title, slug, chapter_id')
+      .select('id, title, slug, chapter_id')
       .order('order_index')
     setSections(data || [])
   }
@@ -46,7 +46,7 @@ export default function TableOfContents({ currentSlug }) {
           {sections.map((section, idx) => (
             <Link
               key={section.id}
-              to={`/lectura/${section.slug}`}
+              to={`/leer/${section.id}`}
               onClick={() => setIsOpen(false)}
               className={`
                 block px-3 py-2 rounded-lg text-sm transition-all duration-200 mb-1
